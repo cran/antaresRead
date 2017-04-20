@@ -1,7 +1,7 @@
-466151b9764595042dee193c0b766aa7 *DESCRIPTION
+bc3d52467036b5b5ab7d5373132b4111 *DESCRIPTION
 cf47069209a8ee5e05e334b69c3deb13 *LICENSE
 362d4a75735a48aa9e852dd09292a00a *NAMESPACE
-c8213507a1fc409a1cfd9f3eec2ed439 *NEWS
+b48b6ae19b568b1f89eeb3a247435779 *NEWS
 d34eee5ba15d2624ac3b2819c12352dd *R/addClassAndAttributes.R
 e9a1cbd56844804ca02776d7e7921836 *R/addDateTimeColumns.R
 dea2bd0a7a792d78432f2aa2b8520eab *R/antaresDataTableMethods.R
@@ -33,7 +33,7 @@ f68eb2f01297cef35c9426aa78484262 *R/setSimulationPath.R
 9a166cb5616a3199c4ae7da88d32daa8 *R/timeIdToDate.R
 bcde7154343cc572500cb75bfc8b4112 *R/viewAntares.R
 ebc3bd8a4f00296250e8337316a4b5b0 *R/zzz.R
-7483d0acb65b7395bd688cbc62b5be1b *build/vignette.rds
+0f5b8bdcb21bc6f9816e53caa8ea2007 *build/vignette.rds
 da131d42be7c539212c2a5058f9ba1d9 *inst/doc/antares.Rmd
 01fcd59abfe2181fe13c9af88aa32df6 *inst/doc/antares.html
 3c4fdde703812299c80b9f02a27c1d8f *inst/testdata/antares-test-study.tar.gz
@@ -58,7 +58,7 @@ ef6fdf1ed853e92461c3b696c6ce44b6 *man/setSimulationPath.Rd
 8b3e621ddae4876af467e6ec1394c75c *man/subset.antaresDataList.Rd
 4c17f633ecae5aeab6a19100e7f72b76 *man/viewAntares.Rd
 2788823d88f0e9698b1f77c0abdbb3a4 *tests/testthat.R
-ac173159d3d51c353a5e1a1b30d44dda *tests/testthat/helper_init.R
+c2402d25d847b2074242d035df890142 *tests/testthat/helper_init.R
 804b5ab14359425f6363a87c54979477 *tests/testthat/test-.timeIdToDate.R
 552b812ad5ac896d1afd1b6dc0901ade *tests/testthat/test-addClassAndAttributes.R
 cf0e3f3107c74748bc082f59af44f764 *tests/testthat/test-aliases.R
