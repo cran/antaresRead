@@ -47,6 +47,15 @@
 #' @export
 #'
 readClusterDesc <- function(opts = simOptions()) {
+  
+  if(isH5Opts(opts)){
+    if(requireNamespace("rhdf5", versionCheck = list(op = ">=", version = "2.20.0"))){
+      return(h5ReadClusterDesc(opts))
+    } else {
+      stop(rhdf5_message)
+    }
+  }
+  
   path <- file.path(opts$inputPath, "thermal/clusters")
 
   areas <- list.files(path)

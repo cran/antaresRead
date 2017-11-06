@@ -36,6 +36,14 @@
 #' @export
 readBindingConstraints <- function(opts=simOptions()) {
   
+  if(isH5Opts(opts)){
+    if(requireNamespace("rhdf5", versionCheck = list(op = ">=", version = "2.20.0"))){
+      return(h5ReadBindingConstraints(opts))
+    } else {
+      stop(rhdf5_message)
+    }
+  }
+  
   path <- file.path(opts$inputPath, "bindingconstraints/bindingconstraints.ini")
   bindingConstraints <- readIniFile(path, stringsAsFactors = FALSE)
   
