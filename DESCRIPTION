@@ -2,8 +2,8 @@ Package: antaresRead
 Type: Package
 Title: Import, Manipulate and Explore the Results of an Antares
         Simulation
-Version: 2.0.1
-Date: 2017-11-14
+Version: 2.0.2
+Date: 2017-11-21
 Authors@R: c(
     person("Jalal-Edine", "ZAWAM", , "jalal-edine.zawam@rte-france.com", role = c("aut", "cre")),
     person("Francois", "Guillem", , "francois.guillem@rte-france.com", role = "aut"),
@@ -22,17 +22,17 @@ LazyData: TRUE
 Imports: data.table (>= 1.9.6), lubridate, plyr, methods, stats,
         stringr, shiny
 Suggests: rhdf5 (>= 2.20.0), testthat, knitr, rmarkdown, foreach,
-        parallel
+        parallel, DT, htmltools
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 Encoding: UTF-8
 biocViews: Infrastructure, DataImport
 NeedsCompilation: no
-Packaged: 2017-11-14 12:27:20 UTC; jalazawa
+Packaged: 2017-11-21 15:49:34 UTC; jalazawa
 Author: Jalal-Edine ZAWAM [aut, cre],
   Francois Guillem [aut],
   Benoit Thieurmel [aut],
   Titouan Robert [aut],
   RTE [cph]
 Repository: CRAN
-Date/Publication: 2017-11-14 15:08:05 UTC
+Date/Publication: 2017-11-21 17:13:14 UTC
