@@ -12,7 +12,7 @@
 
 <meta name="author" content="François Guillem" />
 
-<meta name="date" content="2017-11-21" />
+<meta name="date" content="2018-02-23" />
 
 <title>The antaresRead Package</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">The ‘antaresRead’ Package</h1>
 <h4 class="author"><em>François Guillem</em></h4>
-<h4 class="date"><em>2017-11-21</em></h4>
+<h4 class="date"><em>2018-02-23</em></h4>
 
 
 
@@ -103,7 +103,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">setSimulationPath</span>(<span class="st">&quot;study_path&quot;</span>, <span class="dv">1</span>) <span class="co"># first simulation</span>
 
 <span class="co"># Select a simulation by reverse order</span>
-<span class="kw">setSimulationPath</span>(<span class="st">&quot;study_path&quot;</span>, -<span class="dv">1</span>) <span class="co"># last simulation</span>
+<span class="kw">setSimulationPath</span>(<span class="st">&quot;study_path&quot;</span>, <span class="op">-</span><span class="dv">1</span>) <span class="co"># last simulation</span>
 
 <span class="co"># It is possible to store in a variable the result of the function</span>
 opts &lt;-<span class="st"> </span><span class="kw">setSimulationPath</span>(<span class="st">&quot;study_path&quot;</span>, <span class="dv">1</span>)</code></pre></div>
@@ -127,7 +127,7 @@ opts &lt;-<span class="st"> </span><span class="kw">setSimulationPath</span>(<sp
 <span class="kw">readAntares</span>(<span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;OV. COST&quot;</span>, <span class="st">&quot;OP. COST&quot;</span>, <span class="st">&quot;LOAD&quot;</span>))</code></pre></div>
 <p>You can also choose what elements to import and what level of details you want. For instance, the following command reads the first 10 Monte-Carlo scenarii data at monthly time step for the areas named “area1”, “area2” and “area3”.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">readAntares</span>(<span class="dt">areas=</span><span class="kw">c</span>(<span class="st">&quot;area1&quot;</span>, <span class="st">&quot;area2&quot;</span>, <span class="st">&quot;area3&quot;</span>), <span class="dt">timeStep=</span><span class="st">&quot;monthly&quot;</span>,
-            <span class="dt">synthesis=</span><span class="ot">FALSE</span>, <span class="dt">mcYears =</span> <span class="dv">1</span>:<span class="dv">10</span>)</code></pre></div>
+            <span class="dt">synthesis=</span><span class="ot">FALSE</span>, <span class="dt">mcYears =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</code></pre></div>
 <p>Finally many arguments of <code>readAntares</code> can be used to add input time series to the object returned by the function. For instance, <code>misc=TRUE</code> will add columns containing miscelaneous productions for the imported areas.</p>
 </div>
 <div id="manipulating-data" class="section level2">
@@ -136,12 +136,12 @@ opts &lt;-<span class="st"> </span><span class="kw">setSimulationPath</span>(<sp
 <p>The general syntax is like:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">name_of_the_table[filter_rows, select_columns, group_by]</code></pre></div>
 <p>For instance, <code>areas[area == &quot;08_fr&quot;, .(timeId, LOAD)]</code> will return a table containing columns <code>timeId</code> and <code>LOAD</code> for the area names “08_fr”. In the select statement, it is also possible to calculate new columns. For instance, one can compute the net load like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">areas[, .(area, timeId, <span class="dt">netLoad =</span> LOAD -<span class="st"> `</span><span class="dt">ROW BAL.</span><span class="st">`</span> -<span class="st"> </span>PSP -<span class="st"> </span>MISC. -<span class="st"> </span>NDG -
-<span class="st">                                    </span>H. ROR -<span class="st"> </span>WIND -<span class="st"> </span>SOLAR)]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">areas[, .(area, timeId, <span class="dt">netLoad =</span> LOAD <span class="op">-</span><span class="st"> `</span><span class="dt">ROW BAL.</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span>PSP <span class="op">-</span><span class="st"> </span>MISC. <span class="op">-</span><span class="st"> </span>NDG <span class="op">-</span>
+<span class="st">                                    </span>H. ROR <span class="op">-</span><span class="st"> </span>WIND <span class="op">-</span><span class="st"> </span>SOLAR)]</code></pre></div>
 <p>One can also compute agregated statistics. For instance, the following code will compute the total load of all areas per <code>timeId</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">areas[, .(<span class="dt">totalLoad =</span> <span class="kw">sum</span>(LOAD)), by =<span class="st"> </span>.(timeId)]</code></pre></div>
 <p>Of course, agregation also works with filters. For instance to compute the total load only for french areas (assuming their names contain “fr”):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">areas[area %in%<span class="st"> </span><span class="kw">getAreas</span>(<span class="st">&quot;fr&quot;</span>), .(<span class="dt">totalLoad =</span> <span class="kw">sum</span>(LOAD)), by =<span class="st"> </span>.(timeId)]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">areas[area <span class="op">%in%</span><span class="st"> </span><span class="kw">getAreas</span>(<span class="st">&quot;fr&quot;</span>), .(<span class="dt">totalLoad =</span> <span class="kw">sum</span>(LOAD)), by =<span class="st"> </span>.(timeId)]</code></pre></div>
 <p>If you are not familiar with package <code>data.table</code>, you should have a look at the documentation and especially at the vignettes of the package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">help</span>(<span class="dt">package=</span><span class="st">&quot;data.table&quot;</span>)</code></pre></div>
 </div>
