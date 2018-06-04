@@ -1,8 +1,9 @@
 context("h5 : setSimulationPathH5")
 
-if(requireNamespace("rhdf5")){
+if(requireNamespace("rhdf5") & .runThisTest){
   test_that("h5 : identical setSimulationPathH5", {
     identical(setSimulationPathH5(tpDir), setSimulationPathH5(tpDir, 1))
+    expect_identical(setSimulationPathH5(tpDir), setSimulationPathH5(tpDir, 1))
   })
   
   test_that("h5 : Error no file", {

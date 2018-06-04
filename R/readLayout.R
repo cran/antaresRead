@@ -96,6 +96,12 @@ readLayout <- function(opts = simOptions(), xyCompare = c("union","intersect")) 
     }
   }
   
+  #if there are no areas return NULL
+  if(length(opts$areaList)==0 | identical(opts$areaList,"")) {
+    warning("There is no area in your study.")
+    return(NULL)
+  }
+  
   # areas
   path <- file.path(opts$inputPath, "areas")
   areas <- ldply(list.files(path), function(f) {
