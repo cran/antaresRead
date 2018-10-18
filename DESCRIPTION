@@ -2,7 +2,7 @@ Package: antaresRead
 Type: Package
 Title: Import, Manipulate and Explore the Results of an 'Antares'
         Simulation
-Version: 2.2.0
+Version: 2.2.1
 Date: 2018-09-28
 Authors@R: c(
     person("Jalal-Edine", "ZAWAM", , "jalal-edine.zawam@rte-france.com", role = c("aut", "cre")),
@@ -28,11 +28,11 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 biocViews: Infrastructure, DataImport
 NeedsCompilation: no
-Packaged: 2018-09-28 11:41:31 UTC; jalazawa
+Packaged: 2018-10-18 07:40:09 UTC; jalazawa
 Author: Jalal-Edine ZAWAM [aut, cre],
   Francois Guillem [aut],
   Benoit Thieurmel [aut],
   Titouan Robert [aut],
   RTE [cph]
 Repository: CRAN
-Date/Publication: 2018-09-28 13:00:03 UTC
+Date/Publication: 2018-10-18 10:00:03 UTC

@@ -1,7 +1,7 @@
-b86abd167cf065297f0e7abbc46b3676 *DESCRIPTION
+3883f7e89a24ea4aaa8baddd38f71f66 *DESCRIPTION
 cf47069209a8ee5e05e334b69c3deb13 *LICENSE
 11ce69e64a7e944e7293de50c081c512 *NAMESPACE
-20ce50aedbff6cb405482bd9b48324d7 *NEWS
+091326dc783287a1580f103668e2ed3f *NEWS
 dd7ce1781f3746040300ce5758d49eb0 *R/addClassAndAttributes.R
 247c374a1ca5106b1c44bd487e92755c *R/addDateTimeColumns.R
 dea2bd0a7a792d78432f2aa2b8520eab *R/antaresDataTableMethods.R
@@ -23,7 +23,7 @@ e9f075dc51aeddb3faf8109011d279ff *R/h5_timeManagement.R
 768a8ac69f233415da02b56116f8b2f2 *R/h5_writeData.R
 e722ea8f4667eaaf10fc525693d8a322 *R/h5_writeH5ByYear.R
 19e590cf5ac33ea18210e9d5718fea3e *R/h5utils.R
-5dc66e256c938f6539546f2229af8808 *R/importInput.R
+46e81b9f3a4e622ace7a592d28e72bca *R/importInput.R
 5d0579277f1901746b9d6b61f38ec79f *R/importOutput.R
 229979fdce3f1bdb41ac16aa09db2efd *R/mergeByRef.R
 218ca62e30149ba9fcf2d85d2511dd3d *R/print.R
@@ -36,7 +36,7 @@ e1f1f734dd3f9500b8745bf4d4bb47f9 *R/readInputTS.R
 2e50e33853bba840fda9ca599dc32dd1 *R/read_optim_criteria.R
 88fba185a76c7128d0594dab57ff2cb8 *R/removeVirtualAreas.R
 7e2c7d45ed6bb6a976e8130b6ecbbad6 *R/reorderCols.R
-8d6d0119a2150bed79d1623616127613 *R/setSimulationPath.R
+dc0e6ee0f4be4bec09eb790150e57c33 *R/setSimulationPath.R
 cf46c2a0ac2ebd372830f60b3748c147 *R/showAliases.R
 77849ddf51d0d0fcc98e3af93326f7f7 *R/simOptions.R
 514c64c56a35d71d90d4fa71b831fc8e *R/subset.R
@@ -45,10 +45,10 @@ bcde7154343cc572500cb75bfc8b4112 *R/viewAntares.R
 914ec83022254c784773209d8ee894b1 *R/zzz.R
 d17cabed941ba699def0d7c497042e79 *build/vignette.rds
 da131d42be7c539212c2a5058f9ba1d9 *inst/doc/antares.Rmd
-7fc31cdf074afd600c8ab60f0692551e *inst/doc/antares.html
+7b1087402ecfbd5307131ebd486a2393 *inst/doc/antares.html
 eabc9ee242d2c3f5aa08e16d43a76fe6 *inst/doc/antaresH5.R
 804e7607a7e9c0b1f96bf672f66fc135 *inst/doc/antaresH5.Rmd
-d734a088ce3c153eb9ede9f423632b81 *inst/doc/antaresH5.html
+dba953be27bd50110c63b3fad5b1006c *inst/doc/antaresH5.html
 867824768b6c92793ba41e53dc2d9d8e *inst/format_output/h5Struct.csv
 a6a627e88d9faef3e6e39c3dfaf4ebdf *inst/format_output/tableOutput.csv
 f1523291a247c1c307ab34254332039d *inst/testdata/antares-test-study.tar.gz
@@ -91,6 +91,7 @@ c82ee0929604c826d06c88b80e26597f *tests/testthat/test-antaresDataTableMethods.R
 35d53d57326397e097b2530feabaccca *tests/testthat/test-extractDataList.R
 092cfccf517353de782f949770ecd324 *tests/testthat/test-getAreas.R
 f61352441f6aa8c1467f2e4b9d23ddb4 *tests/testthat/test-getIds.R
+e1724b4602e33ff5c9cd62286338b8e4 *tests/testthat/test-getStartDate.R
 e4eeb27309b4a2edbe4c4be98810caab *tests/testthat/test-groupByDistrict.R
 c52eb39dfef41797533bb70b0762c886 *tests/testthat/test-h5ReadAntares.R
 539b3860ca6ca769573dc6b767cf8016 *tests/testthat/test-h5_nodata.R
@@ -103,11 +104,11 @@ e78ab81266ba3c4e368c9258b59b7f43 *tests/testthat/test-print.R
 e3abf29512b0ddc947e51a8523d4bd55 *tests/testthat/test-readAntares_inputs.R
 4704414fac0d60836a9de069d58dc1b1 *tests/testthat/test-readAntares_mustRun.R
 ca9bcb9bc315e32c5445eb538bcd2908 *tests/testthat/test-readAntares_time_columns.R
-8abeb465b715f5b628f8311c49efb896 *tests/testthat/test-readInputTS.R
+76063e51e25bb85b6b5b3e62643069ff *tests/testthat/test-readInputTS.R
 1631f05978cff3a80524b83b6d957d84 *tests/testthat/test-readLayout.R
 9bcf26265d1241aecee03e47ea862d90 *tests/testthat/test-read_optim_criteria.R
 bc8dcb7ad287e3b1264ee63b1e73b681 *tests/testthat/test-removeVirtualAreas.R
-2af322dc66046e0c8236a7c198c099fd *tests/testthat/test-setup.R
+fe46a91bf51e9c9cb3891570e49a37ec *tests/testthat/test-setup.R
 9717b54995c8dc4594f9eaec3160bdd1 *tests/testthat/test-subset_antaresDataList.R
 d26a23c31fec2d9eb2d071e09e99e4a3 *tests/testthat/test-viewAntares.R
 da131d42be7c539212c2a5058f9ba1d9 *vignettes/antares.Rmd
