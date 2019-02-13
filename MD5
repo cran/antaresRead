@@ -1,7 +1,7 @@
-d49206604c35465183df25234cb4a877 *DESCRIPTION
+f508bd907954529ef4447e3982910bc8 *DESCRIPTION
 8eb461f447c32f3085f846907a97ca26 *LICENSE
-11ce69e64a7e944e7293de50c081c512 *NAMESPACE
-801a49b83fe94e319cd2cc69579ce029 *NEWS
+5dc7e23884c775dffa88cc9830d33ea2 *NAMESPACE
+fb897d956d90fd95b886b0cc8cd19daf *NEWS
 dd7ce1781f3746040300ce5758d49eb0 *R/addClassAndAttributes.R
 247c374a1ca5106b1c44bd487e92755c *R/addDateTimeColumns.R
 dea2bd0a7a792d78432f2aa2b8520eab *R/antaresDataTableMethods.R
@@ -15,7 +15,7 @@ ddfa5d9c49cc5e52f68b443d1429e155 *R/asAntaresDataTable.R
 b55133d7a51aea4cd881b82ed8869d5d *R/getLinks.R
 b79e8059a13cd2c1649792e68fbb7662 *R/giveSize.R
 18cfa65fc86ce34294a84f5589f61957 *R/groupByDistrict.R
-b76a0e4c17685387cd14d69385f20100 *R/h5_antaresReadH5.R
+169a23d3493c4dd02b3529b1d6ab76d2 *R/h5_antaresReadH5.R
 3ced2ffce768183769cb28f5ba101450 *R/h5_readInputs.R
 0a40eb5df8ba8da411e47adb22da28c5 *R/h5_setSimulationPathH5.R
 a245f4b7ce629e019f2e6d2728ea49f0 *R/h5_timeManagement.R
@@ -45,10 +45,10 @@ c59b0979ee88c3c2be1c907a5ae2d668 *R/viewAntares.R
 78732702dd42d1343e00e92c5be4fded *R/zzz.R
 7b8e23e4ecd4e322a02a61f15e3b2511 *build/vignette.rds
 abc8a4cd60ca7d7b09f10add6880145e *inst/doc/antares.Rmd
-0ff32864ca93b98b4c211d7d2a58df42 *inst/doc/antares.html
+329b9687c8bf8290f1a83cf4e2427da5 *inst/doc/antares.html
 eabc9ee242d2c3f5aa08e16d43a76fe6 *inst/doc/antaresH5.R
 7cee230f88eb9e5af179553c70a99a22 *inst/doc/antaresH5.Rmd
-2715b899a881742538ba2bec6d4cd791 *inst/doc/antaresH5.html
+1e116592b552713dc03289de52de604d *inst/doc/antaresH5.html
 8dadf8c768b78816746c48859fe9418a *inst/format_output/h5Struct.csv
 4b48ca5d45626841544eb7e3e1fbd3ad *inst/format_output/tableOutput.csv
 f1523291a247c1c307ab34254332039d *inst/testdata/antares-test-study.tar.gz
@@ -79,7 +79,7 @@ bafea14595663ff1ea9bc66847905277 *man/setRam.Rd
 4c17f633ecae5aeab6a19100e7f72b76 *man/viewAntares.Rd
 d2d7137af4780b2fbdad2f68f7c51465 *man/writeAntaresH5.Rd
 b090d71cbe6491d93a04eb148d0f6216 *tests/testthat.R
-848d2beea303f5b51da054d375f8bff5 *tests/testthat/helper_init.R
+31446f17dd89df7f48c3190482e28e20 *tests/testthat/helper_init.R
 a17979c211020ca58ae2de72529d4fa9 *tests/testthat/test-.timeIdToDate.R
 5cb4bf5afe3894daf485534f4a04526d *tests/testthat/test-RemoveInputColumn.R
 552b812ad5ac896d1afd1b6dc0901ade *tests/testthat/test-addClassAndAttributes.R
