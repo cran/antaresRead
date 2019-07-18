@@ -2,10 +2,12 @@ Package: antaresRead
 Type: Package
 Title: Import, Manipulate and Explore the Results of an 'Antares'
         Simulation
-Version: 2.2.3
+Version: 2.2.4
 Authors@R: c(
+    person("Veronique", "Bachelier", email = "veronique.bachelier@rte-france.com", role = c("aut", "cre")),
     person("Jalal-Edine", "ZAWAM", , "jalal-edine.zawam@rte-france.com", role = "aut"),
-    person("Frederic", "Breant", email = "frederic.breant@rte-france.com", role = c("aut", "cre")),
+    person("Frederic", "Breant", email = "frederic.breant@rte-france.com", role = "aut"),
+    person("Victor", "Perrier", email = "victor.perrier@dreamRs.fr", role = c("aut")),
     person("Francois", "Guillem", , "francois.guillem@rte-france.com", role = "aut"),
     person("Benoit", "Thieurmel", email = "benoit.thieurmel@datastorm.fr", role = "aut"),
     person(given = "Titouan", family = "Robert", email = "titouan.robert@datastorm.fr", role = "aut"),
@@ -27,13 +29,15 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 biocViews: Infrastructure, DataImport
 NeedsCompilation: no
-Packaged: 2019-02-13 09:38:06 UTC; perri
-Author: Jalal-Edine ZAWAM [aut],
-  Frederic Breant [aut, cre],
+Packaged: 2019-07-18 16:04:44 UTC; perri
+Author: Veronique Bachelier [aut, cre],
+  Jalal-Edine ZAWAM [aut],
+  Frederic Breant [aut],
+  Victor Perrier [aut],
   Francois Guillem [aut],
   Benoit Thieurmel [aut],
   Titouan Robert [aut],
   RTE [cph]
-Maintainer: Frederic Breant <frederic.breant@rte-france.com>
+Maintainer: Veronique Bachelier <veronique.bachelier@rte-france.com>
 Repository: CRAN
-Date/Publication: 2019-02-13 13:40:03 UTC
+Date/Publication: 2019-07-18 16:40:12 UTC
