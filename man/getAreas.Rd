@@ -5,12 +5,25 @@
 \alias{getDistricts}
 \title{Select and exclude areas}
 \usage{
-getAreas(select = NULL, exclude = NULL, withClustersOnly = FALSE,
-  regexpSelect = TRUE, regexpExclude = TRUE, opts = simOptions(),
-  ignore.case = TRUE, districts = NULL)
+getAreas(
+  select = NULL,
+  exclude = NULL,
+  withClustersOnly = FALSE,
+  regexpSelect = TRUE,
+  regexpExclude = TRUE,
+  opts = simOptions(),
+  ignore.case = TRUE,
+  districts = NULL
+)
 
-getDistricts(select = NULL, exclude = NULL, regexpSelect = TRUE,
-  regexpExclude = TRUE, opts = simOptions(), ignore.case = TRUE)
+getDistricts(
+  select = NULL,
+  exclude = NULL,
+  regexpSelect = TRUE,
+  regexpExclude = TRUE,
+  opts = simOptions(),
+  ignore.case = TRUE
+)
 }
 \arguments{
 \item{select}{Character vector. If \code{regexpSelect} is TRUE, this vector is
@@ -38,7 +51,7 @@ expressions ?}
 to the specified districts are returned.}
 }
 \value{
-A character vector containg the name of the areas/districts satisfying the 
+A character vector containing the name of the areas/districts satisfying the 
 rules defined by the parameters.
 }
 \description{

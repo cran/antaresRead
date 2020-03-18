@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="François Guillem" />
 
-<meta name="date" content="2019-07-18" />
+<meta name="date" content="2020-03-18" />
 
 <title>The ‘antaresRead’ Package</title>
 
@@ -118,9 +117,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -289,7 +285,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -304,7 +301,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">The ‘antaresRead’ Package</h1>
 <h4 class="author">François Guillem</h4>
-<h4 class="date">2019-07-18</h4>
+<h4 class="date">2020-03-18</h4>
 
 
 
@@ -372,9 +369,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>For instance, <code>areas[area == &quot;08_fr&quot;, .(timeId, LOAD)]</code> will return a table containing columns <code>timeId</code> and <code>LOAD</code> for the area names “08_fr”. In the select statement, it is also possible to calculate new columns. For instance, one can compute the net load like this:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">areas[, .(area, timeId, <span class="dt">netLoad =</span> LOAD <span class="op">-</span><span class="st"> `</span><span class="dt">ROW BAL.</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span>PSP <span class="op">-</span><span class="st"> </span>MISC. <span class="op">-</span><span class="st"> </span>NDG <span class="op">-</span></a>
 <a class="sourceLine" id="cb9-2" title="2"><span class="st">                                    </span>H. ROR <span class="op">-</span><span class="st"> </span>WIND <span class="op">-</span><span class="st"> </span>SOLAR)]</a></code></pre></div>
-<p>One can also compute agregated statistics. For instance, the following code will compute the total load of all areas per <code>timeId</code>:</p>
+<p>One can also compute aggregated statistics. For instance, the following code will compute the total load of all areas per <code>timeId</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">areas[, .(<span class="dt">totalLoad =</span> <span class="kw">sum</span>(LOAD)), by =<span class="st"> </span>.(timeId)]</a></code></pre></div>
-<p>Of course, agregation also works with filters. For instance to compute the total load only for french areas (assuming their names contain “fr”):</p>
+<p>Of course, aggregation also works with filters. For instance to compute the total load only for french areas (assuming their names contain “fr”):</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">areas[area <span class="op">%in%</span><span class="st"> </span><span class="kw">getAreas</span>(<span class="st">&quot;fr&quot;</span>), .(<span class="dt">totalLoad =</span> <span class="kw">sum</span>(LOAD)), by =<span class="st"> </span>.(timeId)]</a></code></pre></div>
 <p>If you are not familiar with package <code>data.table</code>, you should have a look at the documentation and especially at the vignettes of the package:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">help</span>(<span class="dt">package=</span><span class="st">&quot;data.table&quot;</span>)</a></code></pre></div>

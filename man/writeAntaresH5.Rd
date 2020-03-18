@@ -4,23 +4,38 @@
 \alias{writeAntaresH5}
 \title{Convert antares output to h5 file}
 \usage{
-writeAntaresH5(path = NULL, timeSteps = c("hourly", "daily", "weekly",
-  "monthly", "annual"), opts = simOptions(), writeMcAll = TRUE,
-  compress = 1, misc = FALSE, thermalAvailabilities = FALSE,
-  hydroStorage = FALSE, hydroStorageMaxPower = FALSE,
-  reserve = FALSE, linkCapacity = FALSE, mustRun = FALSE,
-  thermalModulation = FALSE, allData = FALSE,
-  writeAllSimulations = FALSE, nbCores = 4,
-  removeVirtualAreas = FALSE, storageFlexibility = NULL,
-  production = NULL, reassignCosts = FALSE, newCols = TRUE,
-  overwrite = FALSE, supressMessages = FALSE)
+writeAntaresH5(
+  path = NULL,
+  timeSteps = c("hourly", "daily", "weekly", "monthly", "annual"),
+  opts = simOptions(),
+  writeMcAll = TRUE,
+  compress = 1,
+  misc = FALSE,
+  thermalAvailabilities = FALSE,
+  hydroStorage = FALSE,
+  hydroStorageMaxPower = FALSE,
+  reserve = FALSE,
+  linkCapacity = FALSE,
+  mustRun = FALSE,
+  thermalModulation = FALSE,
+  allData = FALSE,
+  writeAllSimulations = FALSE,
+  nbCores = 4,
+  removeVirtualAreas = FALSE,
+  storageFlexibility = NULL,
+  production = NULL,
+  reassignCosts = FALSE,
+  newCols = TRUE,
+  overwrite = FALSE,
+  supressMessages = FALSE
+)
 }
 \arguments{
 \item{path}{\code{character} folder where h5 file will be write (default NULL)}
 
 \item{timeSteps}{\code{character} timeSteps}
 
-\item{opts}{\code{list} of simulation parameters returned by the function \link{setSimulationPath}. Defaut to \code{antaresRead::simOptions()}}
+\item{opts}{\code{list} of simulation parameters returned by the function \link{setSimulationPath}. Default to \code{antaresRead::simOptions()}}
 
 \item{writeMcAll}{\code{boolean} write mc-all}
 
