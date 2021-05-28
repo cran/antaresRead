@@ -24,7 +24,6 @@
 #'   If \code{TRUE}, then BALANCE will be corrected by ROW. BAL:
 #'   BALANCE := BALANCE - "ROW. BAL"
 #'   
-#' @inheritParams readAntares
 #'   
 #' @return 
 #' An \code{antaresDataList} object in which virtual areas have been removed and
@@ -219,7 +218,7 @@ removeVirtualAreas <- function(x,
   #     virtual nodes
   flows <- merge(linkList, 
                  x$links[, c(bylink, "FLOW LIN."), with = FALSE], 
-                 by = "link")
+                 by = "link", allow.cartesian = TRUE)
   
   flows[, `:=`(
     flow = `FLOW LIN.` * direction, # Change sign of flows when links are in wrong direction
