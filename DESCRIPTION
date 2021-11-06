@@ -2,7 +2,7 @@ Package: antaresRead
 Type: Package
 Title: Import, Manipulate and Explore the Results of an 'Antares'
         Simulation
-Version: 2.2.8
+Version: 2.2.9
 Authors@R: c(
     person("Veronique", "Bachelier", email = "veronique.bachelier@rte-france.com", role = c("aut", "cre")),
     person("Jalal-Edine", "ZAWAM", role = "aut"),
@@ -21,15 +21,16 @@ URL: https://github.com/rte-antares-rpackage/antaresRead
 BugReports: https://github.com/rte-antares-rpackage/antaresRead/issues
 License: GPL (>= 2) | file LICENSE
 Imports: data.table (>= 1.9.6), bit64, lubridate (>= 1.7.1), plyr,
-        methods, stats, stringr, shiny, pbapply, doParallel, jsonlite
+        methods, stats, stringr, shiny, pbapply, doParallel, jsonlite,
+        httr, utils
 Suggests: rhdf5 (>= 2.24.0), testthat, covr, knitr, rmarkdown, foreach,
         parallel, htmltools
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Encoding: UTF-8
 biocViews: Infrastructure, DataImport
 NeedsCompilation: no
-Packaged: 2021-06-22 14:48:11 UTC; bthie
+Packaged: 2021-11-05 09:36:19 UTC; BenoitThieurmel
 Author: Veronique Bachelier [aut, cre],
   Jalal-Edine ZAWAM [aut],
   Frederic Breant [ctb],
@@ -41,4 +42,4 @@ Author: Veronique Bachelier [aut, cre],
   RTE [cph]
 Maintainer: Veronique Bachelier <veronique.bachelier@rte-france.com>
 Repository: CRAN
-Date/Publication: 2021-06-22 15:20:09 UTC
+Date/Publication: 2021-11-07 00:40:02 UTC

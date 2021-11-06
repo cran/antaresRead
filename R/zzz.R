@@ -26,16 +26,25 @@ pkgEnv$allCompute <- c("misc", "thermalAvailabilities", "hydroStorage", "hydroSt
 pkgEnv$miscNames <- c("CHP", "Bio_mass", "Bio_gas", "Waste", "GeoThermal", "Other", "PSP_input", "ROW_Balance")
 
 # Column names for ren
-pkgEnv$ren <- c("WIND", "SOLAR", "H. ROR", "H. STOR", "MISC. NDG")
+pkgEnv$ren <- c("WIND", "WIND OFFSHORE", "WIND ONSHORE", 
+                "SOLAR", "SOLAR CONCRT.", "SOLAR PV", "SOLAR ROOFT",
+                "RENW. 1", "RENW. 2", "RENW. 3", "RENW. 4",
+                "H. ROR", "H. STOR", 
+                "MISC. DTG", "MISC. DTG 2", "MISC. DTG 3", "MISC. DTG 4")
 
 # Column names for thermal
-pkgEnv$thermal <- c("NUCLEAR", "LIGNITE", "COAL", "GAS", "OIL", "MIX. FUEL", "MISC. DTG")
+pkgEnv$thermal <- c("NUCLEAR", "LIGNITE", "COAL", "GAS", "OIL", "MIX. FUEL", 
+                    "MISC. DTG", "MISC. DTG 2", "MISC. DTG 3", "MISC. DTG 4")
 
 # Column names for generation
-pkgEnv$generation <- c("NUCLEAR", "LIGNITE", "COAL", "GAS", "OIL", "MIX. FUEL", "MISC. DTG", "H. STOR")
+pkgEnv$generation <- c("NUCLEAR", "LIGNITE", "COAL", "GAS", "OIL", "MIX. FUEL", "H. STOR",
+                       "MISC. DTG", "MISC. DTG 2", "MISC. DTG 3", "MISC. DTG 4")
 
 pkgEnv$production <- c("NUCLEAR", "LIGNITE", "COAL", "GAS", "OIL", "MIX. FUEL",
-                       "MISC. DTG", "H. STOR", "H. ROR", "WIND", "SOLAR", "MISC. NDG", "PSP")
+                       "MISC. DTG", "MISC. DTG 2", "MISC. DTG 3", "MISC. DTG 4", 
+                       "H. STOR", "H. ROR", "WIND", "WIND OFFSHORE", "WIND ONSHORE", 
+                       "RENW. 1", "RENW. 2", "RENW. 3", "RENW. 4",
+                       "SOLAR", "SOLAR CONCRT.", "SOLAR PV", "SOLAR ROOFT", "MISC. NDG", "PSP")
 
 # list of column names that are id variables in output files. When they are
 # present in an output file, they are automatically imported, whatever the value
@@ -53,13 +62,25 @@ setAlias("generation", "Production that can be controlled: thermal and hydrostor
 setAlias("renewable", "Renewable productions", pkgEnv$ren)
 setAlias("thermal", "Thermal productions", pkgEnv$thermal)
 setAlias("netLoad", "Variables used to compute net load", 
-         c("areas", "LOAD", "ROW BAL.", "PSP", "MISC. NDG", "H. ROR", 
-           "WIND", "SOLAR", "mustRun"))
+         c("areas", "LOAD", "ROW BAL.", "PSP", "H. ROR", 
+           "MISC. DTG", "MISC. DTG 2", "MISC. DTG 3", "MISC. DTG 4",
+           "WIND", "WIND OFFSHORE", "WIND ONSHORE", 
+           "SOLAR", "SOLAR CONCRT.", "SOLAR PV", "SOLAR ROOFT",
+           "RENW. 1", "RENW. 2", "RENW. 3", "RENW. 4",
+           "mustRun"))
+
+setAlias("rmVA_production", "removeVirtualAreas production varaibles", 
+         setdiff(unique(c(getAlias("generation"), getAlias("netLoad"), "SPIL. ENRG")), c("LOAD", "areas", "mustRun"))
+)
+         
 setAlias("nostat", "All variables except summary variable (MIN, MAX and STD)",
          c("OV. COST", "OP. COST", 
            "MRG. PRICE", "CO2 EMIS.", "BALANCE", "ROW BAL.", "PSP", "MISC. NDG",
-           "LOAD", "H. ROR", "WIND", "SOLAR", "NUCLEAR", "LIGNITE", "COAL",
-           "GAS", "OIL", "MIX. FUEL", "MISC. DTG", "H. STOR", "UNSP. ENRG",
+           "LOAD", "H. ROR", "WIND", "WIND OFFSHORE", "WIND ONSHORE", 
+           "SOLAR", "SOLAR CONCRT.", "SOLAR PV", "SOLAR ROOFT", 
+           "NUCLEAR", "LIGNITE", "COAL", "GAS", "OIL", "MIX. FUEL", 
+           "MISC. DTG", "MISC. DTG 2", "MISC. DTG 3", "MISC. DTG 4",
+           "H. STOR", "UNSP. ENRG", "RENW. 1", "RENW. 2", "RENW. 3", "RENW. 4",
            "SPIL. ENRG", "LOLD", "LOLP", "AVL DTG", "DTG MRG", "MAX MRG",
            "NP COST", "NODU", "FLOW LIN.", "UCAP LIN.",
            "FLOW QUAD.", "CONG. FEE (ALG.)", "CONG. FEE (ABS.)", "MARG. COST",
@@ -95,13 +116,12 @@ rhdf5_message <- "This function require 'rhdf5' (>= 2.24.0) package.
          biocLite('rhdf5')"
 
 # !! parameter versionCheck of requireNamespace does not work correctly, use utils::package_version instead
-.requireRhdf5_Antares<-function(stopP = TRUE){
+.requireRhdf5_Antares <- function(stopP = TRUE){
   if(.check_rhdf5(stopP = stopP)){
     if(.check_rhdf5_version(stopP = stopP)){
       return(TRUE)
     }
   }
-  
   return(FALSE)
 }
 
@@ -135,8 +155,9 @@ pkgEnvAntareasH5 <- new.env()
 
 pkgEnvAntareasH5$varAreas <- c("OV. COST", "OP. COST", "MRG. PRICE", "CO2 EMIS.", "BALANCE",
                                "ROW BAL.", "PSP", "MISC. NDG",  "LOAD", "H. ROR", "WIND", "SOLAR",
-                               "NUCLEAR", "LIGNITE", "COAL", "GAS", "OIL", "MIX. FUEL", "MISC. DTG", "H. STOR",
-                               "UNSP. ENRG", "SPIL. ENRG", "LOLD", "LOLP", "AVL DTG", "DTG MRG", "MAX MRG", "NP COST", "NODU")
+                               "NUCLEAR", "LIGNITE", "COAL", "GAS", "OIL", "MIX. FUEL", "MISC. DTG", 
+                               "H. STOR", "UNSP. ENRG", "SPIL. ENRG", "LOLD", "LOLP", "AVL DTG", 
+                               "DTG MRG", "MAX MRG", "NP COST", "NODU")
 
 pkgEnvAntareasH5$varAreas <- as.vector(sapply(pkgEnvAntareasH5$varAreas, function(X){paste0(X, c("", "_min", "_max", "_std"))}))
 

@@ -4,10 +4,11 @@
 #'
 #' This function has to be used before the \code{read} functions. It sets the path to
 #' the Antares simulation to work on and other useful options (list of areas,
-#' links, areas with clusters, variables, etc.). 
+#' links, areas with clusters, variables, etc.). On local disk with \code{setSimulationPath} or
+#' on an AntaREST API with \code{setSimulationPathAPI}
 #' 
 #' @details 
-#' The simulation chosen with \code{setSimulationPath} becomes the default
+#' The simulation chosen with \code{setSimulationPath} or \code{setSimulationPathAPI} becomes the default
 #' simulation for all functions of the package. This behavior is fine when
 #' working on only one simulation, but it may become problematic when working
 #' on multiple simulations at same time.
@@ -30,6 +31,10 @@
 #'   is not interested by the results of any simulation, but only by the inputs.
 #'   In such a case, the function \code{\link{readAntares}} is unavailable. 
 #'
+#' @param host \code{character} host of AntaREST server API
+#' @param study_id \code{character} id of the target study on the API
+#' @param token \code{character} API personnal access token
+#' @param timeout \code{numeric} API timeout (seconds). Default to 60. See also \code{\link{setTimeoutAPI}}
 #' @return A list containing various information about the simulation, in particular:
 #'   \item{studyPath}{path of the Antares study}
 #'   \item{simPath}{path of the simulation}
@@ -99,7 +104,12 @@
 #' # or
 #' setSimulationPath("path_of_the_folder_of_the_study", 0)
 #' 
-#' 
+#' # on API
+#' setSimulationPath(
+#'     host = "http://antares_api_adress", 
+#'     study_id = "study_id_on_api", 
+#'     token = "token"
+#' )
 #' 
 #' # WORKING WITH MULTIPLE SIMULATIONS
 #' #----------------------------------
@@ -134,6 +144,7 @@
 #' 
 #' @export
 #'
+#' @rdname setSimulationPath
 setSimulationPath <- function(path, simulation = NULL) {
   
   if (missing(path)) {
@@ -147,6 +158,7 @@ setSimulationPath <- function(path, simulation = NULL) {
   }
   
   # Get study, simulation and input paths
+  # .h5 ?
   if(grepl(".h5$", path)){
     if(file.exists(path)){
       if(.requireRhdf5_Antares(stopP = FALSE)){
@@ -158,6 +170,8 @@ setSimulationPath <- function(path, simulation = NULL) {
       stop("Invalid path argument. File .h5 not found")
     }
   }
+
+  # else local file system
   res <- .getPaths(path, simulation)
   if(res[1] == "H5"){
     if(.requireRhdf5_Antares(stopP = FALSE)){
@@ -322,9 +336,15 @@ setSimulationPath <- function(path, simulation = NULL) {
   antaresVersion <- readIniFile(file.path(studyPath, "study.antares"))$antares$version
   params <- readIniFile(file.path(studyPath, "settings/generaldata.ini"))
   
-  # Areas with clusters
+  # Areas with thermal clusters
   areaHasClusters <- vapply(areaList, FUN.VALUE = logical(1), function(a) {
     f <- file.path(inputPath, "thermal/clusters", a, "list.ini")
+    file.exists(f) && file.info(f)$size > 0
+  })
+  
+  # Areas with renewable clusters
+  areaHasResClusters <- vapply(areaList, FUN.VALUE = logical(1), function(a) {
+    f <- file.path(inputPath, "renewables/clusters", a, "list.ini")
     file.exists(f) && file.info(f)$size > 0
   })
   
@@ -336,6 +356,7 @@ setSimulationPath <- function(path, simulation = NULL) {
     linkList = as.character(linksDef$link),
     linksDef = linksDef,
     areasWithClusters = areaList[areaHasClusters],
+    areasWithResClusters = areaList[areaHasResClusters],
     parameters = params
   )
 
@@ -383,13 +404,21 @@ setSimulationPath <- function(path, simulation = NULL) {
   
   linkList <- list.files(file.path(dataPath, "links"))
   
-  # Areas containing clusters
+  # Areas containing thermal clusters
   hasClusters <- laply(file.path(dataPath, "areas", areaList), function(x) {
     f <- list.files(x)
-    any(grepl("details", f))
+    any(grepl("(details-annual)|(details-daily)|(details-hourly)|(details-monthly)|(details-weekly)", f))
   })
   
   areasWithClusters <- areaList[hasClusters]
+  
+  # Areas containing renewable clusters
+  hasResClusters <- laply(file.path(dataPath, "areas", areaList), function(x) {
+    f <- list.files(x)
+    any(grepl("details-res-", f))
+  })
+  
+  areasWithResClusters <- areaList[hasResClusters]
   
   # Available variables
   variables <- list()
@@ -429,6 +458,7 @@ setSimulationPath <- function(path, simulation = NULL) {
     linkList = linkList,
     linksDef = linksDef,
     areasWithClusters = areasWithClusters,
+    areasWithResClusters = areasWithResClusters,
     variables = variables,
     parameters = params
   )
@@ -465,7 +495,7 @@ setSimulationPath <- function(path, simulation = NULL) {
     lubridate::year(dateLeapYear) <- year(dateLeapYear) + 1
 
   # If inconsistency, then choose a year that restores consistency
-  if (jan1 != wday(dateJan1) | lubridate::leap_year(dateLeapYear) != p$leapyear) {
+  if (jan1 != lubridate::wday(dateJan1) | lubridate::leap_year(dateLeapYear) != p$leapyear) {
 
     if (p$leapyear & p$`first-month-in-year` == "february") {
       newYear <- switch(jan1, 2045, 2029, 2041, 2025, 2037, 2021, 2033)

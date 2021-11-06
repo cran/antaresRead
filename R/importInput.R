@@ -34,7 +34,7 @@
 #' 
 .importInputTS <- function(area, timeStep, opts, fileNamePattern, colnames, 
                            inputTimeStep, fun = "sum", type = "simple", colSelect = NULL, ...) {
-  
+
   path <- file.path(opts$inputPath, sprintf(fileNamePattern, area))
   
   # if(!is.null(colSelect)){
@@ -48,48 +48,52 @@
                       daily=range(.getTimeId(opts$timeIdMin:opts$timeIdMax, "daily", opts)), 
                       monthly=range(.getTimeId(opts$timeIdMin:opts$timeIdMax, "monthly", opts)))
   
-  if(opts$typeLoad == "api"){
-    path <- .changeNameInput(path, opts)
-  }
   
-  
-
-
   if (opts$typeLoad == 'api' || (file.exists(path) && !file.size(path) == 0)) {
     if(is.null(colSelect))
     {
-      inputTS <- fread(path, integer64 = "numeric", header = FALSE, showProgress = FALSE)
-    }else{
-      inputTS <- fread(path, integer64 = "numeric", header = FALSE, select = colSelect, showProgress = FALSE)
+      # inputTS <- fread(path, integer64 = "numeric", header = FALSE, showProgress = FALSE)
+      inputTS <- fread_antares(opts = opts, file = path, integer64 = "numeric", header = FALSE, showProgress = FALSE)
+    } else {
+      # inputTS <- fread(path, integer64 = "numeric", header = FALSE, select = colSelect, showProgress = FALSE)
+      inputTS <- fread_antares(opts = opts, file = path, integer64 = "numeric", header = FALSE, select = colSelect, showProgress = FALSE)
     }
     
-    if (opts$typeLoad == 'api' || opts$antaresVersion < 650) {
-      
-      inputTS <- .reorderInputTSHydroStorage(inputTS, path, opts)
+    # browser()
+    if (opts$antaresVersion < 650) {
+      if(!is.null(inputTS)){
+        inputTS <- .reorderInputTSHydroStorage(inputTS, path, opts)
+      }
     }
     
-    inputTS <- inputTS[timeRange[1]:timeRange[2]]
+    if(!is.null(inputTS)){
+      inputTS <- inputTS[timeRange[1]:timeRange[2]]
+    } else {
+      if (type == "matrix") return(NULL)
+      inputTS <- data.table(matrix(0L, timeRange[2] - timeRange[1] + 1,length(colnames)))
+    }
   } else {
     if (type == "matrix") return(NULL)
     inputTS <- data.table(matrix(0L, timeRange[2] - timeRange[1] + 1,length(colnames)))
   }
   
-  # Add area and timeId columns and put it at the begining of the table
-  inputTS$area <- area
-  inputTS$timeId <- timeRange[1]:timeRange[2]
-  .reorderCols(inputTS)
-  
-  inputTS <- changeTimeStep(inputTS, timeStep, inputTimeStep, fun = fun, opts = opts)
-  
-  # If the data is a matrix of time series melt the data
-  if (type == "matrix") {
-    colnames <- c("tsId", colnames)
-    inputTS <- melt(inputTS, id.vars = c("area", "timeId"))
-    inputTS$variable <- as.integer(substring(inputTS$variable, 2))
+  if(!is.null(inputTS)){
+    # Add area and timeId columns and put it at the begining of the table
+    inputTS$area <- area
+    inputTS$timeId <- timeRange[1]:timeRange[2]
+    .reorderCols(inputTS)
+    
+    inputTS <- changeTimeStep(inputTS, timeStep, inputTimeStep, fun = fun, opts = opts)
+    
+    # If the data is a matrix of time series melt the data
+    if (type == "matrix") {
+      colnames <- c("tsId", colnames)
+      inputTS <- melt(inputTS, id.vars = c("area", "timeId"))
+      inputTS$variable <- as.integer(substring(inputTS$variable, 2))
+    }
+    
+    setnames(inputTS, names(inputTS), c("area", "timeId", colnames))
   }
-  
-  setnames(inputTS, names(inputTS), c("area", "timeId", colnames))
-  
   inputTS
 }
 
@@ -101,8 +105,13 @@
 .importThermalAvailabilities <- function(area, timeStep, opts, ...) {
   if (!area %in% opts$areasWithClusters) return(NULL)
   
-  clusters <- list.files(file.path(opts$inputPath, "thermal/series", area))
-  
+  if(!"api" %in% opts$typeLoad){
+    clusters <- list.files(file.path(opts$inputPath, "thermal/series", area))
+  } else {
+    clusters <- names(read_secure_json(file.path(opts$inputPath, "thermal/series", area), 
+                                 token = opts$token, timeout = opts$timeout))
+  }
+
   ldply(clusters, function(cl) {
     filePattern <- sprintf("%s/%s/%%s/series.txt", "thermal/series", area)
     res <- .importInputTS(cl, timeStep, opts, filePattern, "ThermalAvailabilities",
@@ -118,21 +127,46 @@
   
 }
 
+.importResProduction <- function(area, timeStep, opts, ...) {
+
+  if (!area %in% opts$areasWithResClusters) return(NULL)
+  
+  if(!"api" %in% opts$typeLoad){
+    clusters <- list.files(file.path(opts$inputPath, "renewables/series", area))
+  } else {
+    clusters <- names(read_secure_json(file.path(opts$inputPath, "renewables/series", area), 
+                                       token = opts$token, timeout = opts$timeout))
+  }
+
+  ldply(clusters, function(cl) {
+    filePattern <- sprintf("%s/%s/%%s/series.txt", "renewables/series", area)
+    res <- .importInputTS(cl, timeStep, opts, filePattern, "production",
+                          inputTimeStep = "hourly", type = "matrix")
+    
+    if (is.null(res)) return(NULL)
+    
+    res$area <- area
+    res$cluster <- cl
+    
+    setcolorder(res, c("area", "cluster", "timeId", setdiff(names(res), c("area", "cluster", "timeId"))))
+  })
+}
+
 .importROR <- function(area, timeStep, opts, ...) {
   .importInputTS(area, timeStep, opts, "hydro/series/%s/ror.txt", "ror", 
                  inputTimeStep = "hourly", type = "matrix")
 }
 
 .importHydroStorageInput <- function(area, timeStep, opts, ...) {
-  inputTimeStepV <- ifelse(.getInputOptions(opts)$antaresVersion >= 650, yes = "daily", no = "monthly")
+  inputTimeStepV <- ifelse(opts$antaresVersion >= 650, yes = "daily", no = "monthly")
   .importInputTS(area, timeStep, opts, "hydro/series/%s/mod.txt", "hydroStorage", 
                  inputTimeStep = inputTimeStepV, type = "matrix")
 }
-  
+
 .importHydroStorageMaxPower <- function(area, timeStep, opts, unselect = NULL, ...) {
   
   unselect = unselect$areas
-  if (.getInputOptions(opts)$antaresVersion >= 650) {
+  if (opts$antaresVersion >= 650) {
     beginName <- c("generatingMaxPower", "generatingMaxEnergy", 
                    "pumpingMaxPower", "pumpingMaxEnergy")
   } else {
@@ -203,20 +237,22 @@
 }
 
 .importLinkCapacity <- function(link, timeStep, opts, unselect = NULL, ...) {
-  
+
   areas <- strsplit(link, " - ")[[1]]
   
   unselect <- unselect$links
   
   #TODO DEL after some antaresVersion, by example, del this check after Antares
   #version 8 and check in readAntares the version
-  if (.getInputOptions(opts)$antaresVersion >= 650) {
+  if (opts$antaresVersion >= 650) {
     beginName <- c("transCapacityDirect", "transCapacityIndirect",
                    "hurdlesCostDirect", "hurdlesCostIndirect",
-                   "impedances", "loopFlow", "p.ShiftMin", "p.ShiftMax")    
+                   "impedances", "loopFlow", "p.ShiftMin", "p.ShiftMax")
+    fun = c("sum", "sum", "mean", "mean", "mean", "sum", "sum", "sum")
   } else {
     beginName <- c("transCapacityDirect", "transCapacityIndirect",
                    "impedances", "hurdlesCostDirect", "hurdlesCostIndirect")
+    fun = c("sum", "sum", "mean", "mean", "mean")
   }
   
   if(!is.null(unselect)){
@@ -232,7 +268,7 @@
                         sprintf("%s/%%s.txt", file.path("links", areas[1])), 
                         colnames=names,
                         inputTimeStep = "hourly", 
-                        fun = c("sum", "sum", "mean", "mean", "mean"), colSelect = colSelect)
+                        fun = fun, colSelect = colSelect)
   
   res$area <- NULL
   res$link <- link
@@ -246,10 +282,14 @@
   unselect <- unselect$areas
   path <- file.path(opts$inputPath, "thermal/prepro", area)
   
-  clusters <- list.files(path)
+  if(!"api" %in% opts$typeLoad){
+    clusters <- list.files(path)
+  } else {
+    clusters <- names(read_secure_json(path, token = opts$token, timeout = opts$timeout))
+  }
   
   beginName <- c("marginalCostModulation", "marketBidModulation", 
-      "capacityModulation", "minGenModulation")
+                 "capacityModulation", "minGenModulation")
   if(!is.null(unselect)){
     colSelect <- which(!beginName%in%unselect)
     names <- beginName[colSelect]
@@ -262,9 +302,11 @@
   res <- ldply(clusters, function(cl) {
     if(is.null(colSelect))
     {
-    modulation <- fread(file.path(path, cl, "modulation.txt"), colClasses = "numeric")
+      # modulation <- fread(file.path(path, cl, "modulation.txt"), colClasses = "numeric")
+      modulation <- fread_antares(opts = opts, file = file.path(path, cl, "modulation.txt"), colClasses = "numeric")
     }else{
-      modulation <- fread(file.path(path, cl, "modulation.txt"), select = colSelect, colClasses = "numeric")
+      # modulation <- fread(file.path(path, cl, "modulation.txt"), select = colSelect, colClasses = "numeric")
+      modulation <- fread_antares(opts = opts, file = file.path(path, cl, "modulation.txt"), select = colSelect, colClasses = "numeric")
     }
     
     setnames(modulation, 
@@ -284,7 +326,7 @@
   })
 }
 
-.changeNameInput <- function(path, opts){
-  out <- sub(pattern = "studies", "file", path)
-  out <- gsub(" ", "%20", out)
-}
+# .changeNameInput <- function(path, opts){
+#   out <- sub(pattern = "studies", "file", path)
+#   out <- gsub(" ", "%20", out)
+# }
