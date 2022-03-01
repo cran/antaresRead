@@ -2,7 +2,7 @@ Package: antaresRead
 Type: Package
 Title: Import, Manipulate and Explore the Results of an 'Antares'
         Simulation
-Version: 2.2.9
+Version: 2.2.95
 Authors@R: c(
     person("Veronique", "Bachelier", email = "veronique.bachelier@rte-france.com", role = c("aut", "cre")),
     person("Jalal-Edine", "ZAWAM", role = "aut"),
@@ -30,7 +30,7 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 biocViews: Infrastructure, DataImport
 NeedsCompilation: no
-Packaged: 2021-11-05 09:36:19 UTC; BenoitThieurmel
+Packaged: 2022-03-01 12:29:40 UTC; BenoitThieurmel
 Author: Veronique Bachelier [aut, cre],
   Jalal-Edine ZAWAM [aut],
   Frederic Breant [ctb],
@@ -42,4 +42,4 @@ Author: Veronique Bachelier [aut, cre],
   RTE [cph]
 Maintainer: Veronique Bachelier <veronique.bachelier@rte-france.com>
 Repository: CRAN
-Date/Publication: 2021-11-07 00:40:02 UTC
+Date/Publication: 2022-03-01 13:50:02 UTC
