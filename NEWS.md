@@ -1,5 +1,53 @@
 > Copyright © 2016 RTE Réseau de transport d’électricité
 
+# antaresRead 2.4.2
+
+NEW FEATURES:
+
+* New function `getGeographicTrimming()` returns filtering options for selected areas (links optional).
+* New function added : `readInputRes()` for reading renewable clusters input data 
+
+
+* Existing function `getLinks()` now has a new argument **withTransmission**. if TRUE, return additional column with type of transmission capacities.
+* Existing function `readInputThermal()` : added new argument for thermalData
+
+
+# antaresRead 2.4.1
+
+NEW FEATURES:
+
+Added new functions `readInputThermal()` and `readAntaresClusters()` :
+Both functions take a vector of **clusters** instead of **areas** 
+* `readInputThermal()` : read thermal TS (availabilities) and modulation in Input mode
+* `readAntaresClusters()` : read output data for clusters only with thematic trimming
+
+
+
+# antaresRead 2.4.0
+
+NEW FEATURES:
+
+Major upgrade to `aggregateResult()` and `parAggregateMCall()` :
+* Faster & memory efficient
+* Support for Antares studies up to v8.3 (v8.4 experimental)
+* Dynamic timestep detection
+* Creation of grid folder
+* Recycling of original mc-all data
+
+
+
+# antaresRead 2.3.2
+
+NEW FEATURES:
+
+added "profit by cluster" when reading cluster data.
+
+BUGFIXES:
+
+Fix for 404 error when some output is missing in API mode(#188).
+
+
+
 # antaresRead 2.3.1
 
 BUGFIXES:
