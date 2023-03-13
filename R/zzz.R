@@ -49,7 +49,7 @@ pkgEnv$production <- c("NUCLEAR", "LIGNITE", "COAL", "GAS", "OIL", "MIX. FUEL",
 # list of column names that are id variables in output files. When they are
 # present in an output file, they are automatically imported, whatever the value
 # of "select" is.
-pkgEnv$idVars <- c("area", "district", "sector", "cluster", "link", "mcYear", "timeId", "time", "day", "week", "month", "hour")
+pkgEnv$idVars <- c("area", "district", "sector", "cluster", "link", "bindingConstraint", "mcYear", "timeId", "time", "day", "week", "month", "hour")
 
 pkgEnv$idTimeVars <- c("timeId", "time", "day", "week", "month", "hour")
 
@@ -103,7 +103,8 @@ utils::globalVariables(
     "transCapacityDirect", "transCapacityIndirect", "varea", "x", "y",
     "NODU", "min.stable.power", "thermalPmin", "name", "value",
     "Folder", "Mode", "Stats", "Name", "progNam", "mrgprice", "isLOLD_cum",
-    "...To", "upstream", "downstream", "LOLD", "LOLD_data", "LOLP", "warn_for_status")
+    "...To", "upstream", "downstream", "LOLD", "LOLD_data", "LOLP", "warn_for_status",
+    "MRG. PRICE", "H. LEV", "V2", "V1")
 )
 
 #-----------------------------  HDF5 ------------------------------------#
