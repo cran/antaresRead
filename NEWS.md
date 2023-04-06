@@ -1,11 +1,25 @@
 > Copyright © 2016 RTE Réseau de transport d’électricité
 
+
+# antaresRead 2.5.1
+
+BUGFIXES:
+
+* Major correction to `setSimulationPath()` (mc-all/mc-ind) (#199)
+
+DEV:
+
+* Added new test study v8.5.
+* Package no longer tested on study v6.
+
+
+
 # antaresRead 2.5.0
 
 NEW FEATURES:
 
 * Full support of studies up to v8.5
-* Function `readAntares()` has new argument for binding constraints output (v8.4+)
+* Function `readAntares()` has new argument for binding constraints output (v8.4+) (#173)
 * New functions `readDigestFile()`, `mergeDigests()` and `writeDigest()` to manipulate digest file.
 * Mc-all aggregation : 
   * added computation of record years
