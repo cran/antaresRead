@@ -1,6 +1,35 @@
 > Copyright © 2016 RTE Réseau de transport d’électricité
 
 
+# antaresRead 2.6.0
+
+NEW FEATURES (Antares v8.6, cf. Antares v8.6 changelog) :
+
+* `readClusterSTDesc()` read "short-term storage" clusters parameters (input files of an antares study)
+
+
+BREAKING CHANGES (Antares v8.6) :
+
+* `readInputTS()` is now compatible to read time series with :  
+  - "short-term storage"  
+  - "mingen" (pmin hydro value)
+* `setSimulationPath()` has new parameter `areasWithSTClusters` (name of area with "st-storage" cluster)
+
+
+BUGFIXES : 
+
+* `setSimulationPathAPI` generate new global parameter `sleep` to add timer to API request
+* Correction of `.importOutput()` to use `readAntares()` with `parallel == TRUE` in shiny application
+* `setSimulationPathAPI()` delete a redundant API request
+* `readClusterDesc()` minor fix in API mode + fix if no cluster exists => return specific error message
+* `readIniAPI()` read well file `generaldata` for sections "playlist" and "variables selection"
+
+
+DATA : 
+
+* A test study in tar.gz format is available in version `v8.6.0`
+
+
 # antaresRead 2.5.1
 
 BUGFIXES:

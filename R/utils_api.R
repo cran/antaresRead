@@ -256,10 +256,9 @@ read_secure_json <- function(url, token = NULL, timeout = 60, config = list()) {
 
   }, allLinks, names(allLinks)))
 
+  # info <- read_secure_json(studyPath, ...)
 
-  info <- read_secure_json(studyPath, ...)
-
-  antaresVersion <- info$study$antares$version
+  antaresVersion <- paths$version
   params <- read_secure_json(file.path(studyPath, "settings", "generaldata"), ...)
 
   # Areas with clusters
@@ -289,19 +288,44 @@ read_secure_json <- function(url, token = NULL, timeout = 60, config = list()) {
       })
     }
   }
-
-
-  list(
-    mode = "Input",
-    antaresVersion = antaresVersion,
-    areaList = areaList,
-    districtList = districtList,
-    linkList = as.character(linksDef$link),
-    linksDef = linksDef,
-    areasWithClusters = areaList[areaHasClusters],
-    areasWithResClusters = areaList[areaHasResClusters],
-    parameters = params
-  )
+  
+  # Areas with st-storage (>=860) 
+  if(paths$version>=860){
+    clusterSTList <- read_secure_json(file.path(inputPath, "st-storage", "clusters", "&depth=4"), ...)
+    areaHasSTClusters <- vapply(areaList, FUN.VALUE = logical(1), function(a) {
+      TF <- FALSE
+      try({
+        f <- clusterSTList[[a]]$list
+        if(!is.null(f))return(TRUE)
+      })
+      return(TF)
+    })
+    
+    # return
+    list(
+      mode = "Input",
+      antaresVersion = antaresVersion,
+      areaList = areaList,
+      districtList = districtList,
+      linkList = as.character(linksDef$link),
+      linksDef = linksDef,
+      areasWithClusters = areaList[areaHasClusters],
+      areasWithResClusters = areaList[areaHasResClusters],
+      areasWithSTClusters = areaList[areaHasSTClusters],
+      parameters = params
+    )
+  }else
+    list(
+      mode = "Input",
+      antaresVersion = antaresVersion,
+      areaList = areaList,
+      districtList = districtList,
+      linkList = as.character(linksDef$link),
+      linksDef = linksDef,
+      areasWithClusters = areaList[areaHasClusters],
+      areasWithResClusters = areaList[areaHasResClusters],
+      parameters = params
+    )
 }
 
 # valid_url <- function(url_in, t = 2){
@@ -313,6 +337,8 @@ read_secure_json <- function(url, token = NULL, timeout = 60, config = list()) {
 
 #' @import jsonlite
 #' @export
+#' @return  
+#' \item{sleep}{timer for api commande execute}
 #' @rdname setSimulationPath
 setSimulationPathAPI <- function(host, study_id, token, simulation = NULL,
                                  timeout = 60, httr_config = list()) {
@@ -357,7 +383,11 @@ setSimulationPathAPI <- function(host, study_id, token, simulation = NULL,
 
   res <- .getPathsAPI(host, study_id, simulation, token = token, timeout = timeout, config = httr_config)
 
-  res$studyName <- read_secure_json(file.path(res$studyPath, "study"), token = token, timeout = timeout, config = httr_config)$antares$caption
+  res$studyName <- read_secure_json(file.path(res$studyPath, "study"), 
+                                    token = token, timeout = timeout, 
+                                    config = httr_config)$antares$caption
+  
+  res$version <- check_study$version
   
   # If "input mode", read options from the input folder, else read them from
   # the simulation folder.
@@ -391,6 +421,12 @@ setSimulationPathAPI <- function(host, study_id, token, simulation = NULL,
   res$timeout <- timeout
   res$httr_config <- httr_config
   res$modeAPI <- "sync"
+  
+  # delete version to keep only "antares_version"
+  res$version <- NULL
+  
+  # timer for api commande execute
+  res$sleep <- 0.5
 
   class(res) <- c("simOptions")
 
