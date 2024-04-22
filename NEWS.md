@@ -1,5 +1,22 @@
 > Copyright © 2016 RTE Réseau de transport d’électricité
 
+# antaresRead 2.6.1 
+
+BUGFIXES :  
+
+* `setSimulationPathAPI()` :  
+  - returns an API exception if the requested study ID is incorrect 
+  - `simulation` the simulation parameter works with negative values within the limit of the number of simulations
+* correction in `readClusterDesc()` calls to add "opts"
+* `readAntares()` :  
+  - returns the right column names for details-timeStep.txt and details-res-timeStep.txt 
+* Correction in `.formatlist()`, read N-level list instead of 2.
+
+BREAKING CHANGES :  
+
+* `api_get()` has a new parameter to control JSON file parsing
+* `readClusterDesc()`/ `readClusterRESDesc()` / `readClusterSTDesc()` 
+return empty dataTable and warning if no cluster in Antares study.
 
 # antaresRead 2.6.0
 
