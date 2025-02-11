@@ -40,6 +40,32 @@
   colname
 }
 
+
+#' .check_output_files_existence
+#'
+#' @param opts
+#'   list of simulation parameters returned by the function
+#'   \code{\link{setSimulationPath}}
+#' @param args
+#' (data frame) contains the arguments to read the outputs
+#'
+#' @return
+#' Logical vector containing the existence of the output file.
+#'
+#' @noRd
+#'
+.check_missing_output_files <- function(opts, args){
+  
+  if(is_api_study(opts)){
+    outputMissing <- !sapply(gsub(pattern = ".txt$", replacement = "", args$path), FUN = .getSuccess, token = opts$token)
+  }else{
+    outputMissing <- !file.exists(args$path)
+  }
+  
+  return(outputMissing)
+}
+
+
 #' .importOutput
 #'
 #' Private function used to import the results of a simulation. The type of result
@@ -93,14 +119,8 @@
     args$id <- args$link
   }
   
-  if(opts$typeLoad == "api"){
-    # args$path <- sapply(args$path, .changeName, opts = opts)
-    # outputMissing <- unlist(sapply(args$path, function(X)httr::HEAD(X)$status_code!=200))
-    # print(outputMissing)
-    outputMissing <- rep(FALSE, nrow(args))
-  }else{
-    outputMissing <- !file.exists(args$path)
-  }
+  outputMissing <- .check_missing_output_files(opts = opts, args = args)
+  
   if (all(outputMissing)) {
     message("No data corresponding to your query.")
     return(NULL)
@@ -377,16 +397,16 @@
     
     # Get cluster capacity and must run mode
     clusterDesc <- readClusterDesc(opts)
-    if(is.null(clusterDesc[["must-run"]]))
-      clusterDesc[["must-run"]] <- FALSE
-    clusterDesc[is.na(`must-run`), `must-run` := FALSE]
-    if (is.null(clusterDesc[["min-stable-power"]])) 
-      clusterDesc[["min-stable-power"]] <- 0
-    clusterDesc[is.na(`min-stable-power`), `min-stable-power` := 0]
+    if(is.null(clusterDesc[["must.run"]]))
+      clusterDesc[["must.run"]] <- FALSE
+    clusterDesc[is.na(must.run), must.run := FALSE]
+    if (is.null(clusterDesc[["min.stable.power"]])) 
+      clusterDesc[["min.stable.power"]] <- 0
+    clusterDesc[is.na(min.stable.power), min.stable.power := 0]
     clusterDesc <- clusterDesc[, .(area, cluster,
                                    capacity = nominalcapacity * unitcount,
-                                   `min-stable-power`,
-                                   `must-run`)]
+                                   min.stable.power,
+                                   `must.run`)]
     
     # Are clusters in partial must run mode ?
     mod <- llply(areas, .importThermalModulation, opts = opts, timeStep = "hourly")
@@ -451,16 +471,16 @@
       
     }
     
-    .mergeByRef(res, clusterDesc[,.(area, cluster, `must-run`, `min-stable-power`)])
+    .mergeByRef(res, clusterDesc[,.(area, cluster, must.run, min.stable.power)])
     
     if (is.null(res$NODU)) res[, thermalPmin := 0]
-    else res[, thermalPmin := `min-stable-power` * NODU]
+    else res[, thermalPmin := min.stable.power * NODU]
     
     res[, `:=`(
-      mustRun = production * `must-run`,
-      mustRunTotal = production * `must-run` + mustRunPartial,
-      `must-run` = NULL,
-      `min-stable-power` = NULL
+      mustRun = production * must.run,
+      mustRunTotal = production * must.run + mustRunPartial,
+      must.run = NULL,
+      min.stable.power = NULL
     )]
     
     res[, thermalPmin := pmax(thermalPmin, mustRunTotal)]
@@ -966,5 +986,3 @@
 #   out <- sub(pattern = "studies", "file", paste0(opts$studyPath , "/output/", opts$simOutputName,"/", path_rev))
 #   out <- gsub(" ", "%20", out)
 # }
-
-

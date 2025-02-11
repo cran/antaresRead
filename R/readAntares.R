@@ -123,7 +123,7 @@
 #'   similar to mustRunTotal except it also takes into account the production
 #'   induced by the minimum stable power of the units of a cluster. More
 #'   precisely, for a given cluster and a given time step, it is equal to 
-#'   \code{min(NODU x min-stable-power, mustRunTotal)}.
+#'   \code{min(NODU x min.stable.power, mustRunTotal)}.
 #' @param select
 #'   Character vector containing the name of the columns to import. If this 
 #'   argument is \code{NULL}, all variables are imported. Special names 
@@ -243,7 +243,7 @@ readAntares <- function(areas = NULL, links = NULL, clusters = NULL,
   
   ##Controle size of data load
   size <- .giveSize(opts = opts, areas = areas, links = links, 
-                    clusters = clusters, districts = districts, select = select,
+                    clusters = clusters, clustersST = clustersST, districts = districts, select = select,
                     mcYears = mcYears ,timeStep = timeStep, misc = misc, thermalAvailabilities = thermalAvailabilities,
                     hydroStorage = hydroStorage, hydroStorageMaxPower = hydroStorageMaxPower, reserve = reserve,
                     linkCapacity = linkCapacity, mustRun = mustRun, thermalModulation = thermalModulation)/1024

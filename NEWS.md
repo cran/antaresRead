@@ -1,5 +1,33 @@
 > Copyright © 2016 RTE Réseau de transport d’électricité
 
+
+# antaresRead 2.9.0
+(cf. Antares v9 changelog)  
+
+NEW FEATURES:  
+
+* `setSimulationPath()` / `setSimulationPathAPI()` have a new parameter `'verbose'` (default to `FALSE`) to manage diagnostic messages
+
+BUGFIXES :  
+
+* `setSimulationPathAPI()` : encode URL before reading the data in simulation mode
+* `api_get()` : add warn_for_status in importFrom section
+* `readAntares()` : In disk mode, return all the available columns for a short-term storage output and match the column with the content
+* `.importOutput()` : check if output file exists in API mode (`.check_output_files_existence()`)
+* `.giveSize()` : take into account ST clusters in the size computing and use enabled == TRUE or empty enabled for enabled clusters and ST clusters 
+
+BREAKING CHANGES :  
+
+* `setSimulationPathAPI()` : reads and returns the new converted study version format (ex : 9.0 => 900)  
+* `readClusterDesc()` / `readClusterResDesc()` / `readClusterSTDesc()` have a new parameter (`dot_format = TRUE`) to return two format to display input cluster properties
+
+GITHUB ACTIONS :  
+
+* Actions artifacts v3 is closing down, update to v4  
+* test-coverage.yaml updated 
+
+
+
 # antaresRead 2.7.2
 
 NEW FEATURES:
@@ -16,6 +44,7 @@ BUGFIXES :
 
 * `setSimulationPathAPI()`: control the existence of the output folder **links** or **areas** before reading the data (upgrade Antares Web)
 * `readClusterDesc()` / `readClusterResDesc()` / `readClusterSTDesc()` return a data.table in API mode
+* `setSimulationPathAPI()` : encode URL before reading the data in simulation mode
 
 
 # antaresRead 2.7.1 
