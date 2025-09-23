@@ -1,24 +1,81 @@
 > Copyright © 2016 RTE Réseau de transport d’électricité
 
+# antaresRead 2.9.2
+
+NEW FEATURES (cf. Antares v9.2 changelog) :
+
+* `readClusterSTDesc()` read new clusters parameters (parameters names are now sorted)
+* `readInputTS()` read new optional time Series (5 time series)
+* **NEW FUNCTION** `read_storages_constraints()` read properties and time series of a *short-term storages/additional constraints*
+
+
+NEW FEATURES (other) :  
+
+* `readBindingConstraints()` : has a new parameter `'constraint_names'` so the user can read only the binding constraints he wants (optimization)
+* `getThematicTrimming()` to read sub section "variables selection" of file `generaldata.ini`  
+  - Use new referentials, twice for file system and one for API  
+  - New function `list_thematic_variables()` to display available columns according to current study version
+* `readAntares()` : has a new parameter `'number_of_batches'` to choose the number of batches for the data you read. Only available in API mode.
+
+
+BUGFIXES :
+
+* `.manage_list_structure()` : returns the `comments` property in `properties` instead of `coefs`
+* `.giveInfoRequest()` : if argument `clustersRes` is not null, argument `areas` should not be equal to `all`
+* `.getSimOptions()` : add `Expansion` mode to compute `simDataPath` value
+* `.giveSize()` : control the size of the renewables outputs
+
+BREAKING CHANGES :  
+ 
+* `.importOutputForAreas()` / `.importOutputForLinks()` / `.importOutputForClusters()` / `.importOutputForResClusters()` / `.importOutputForSTClusters()` : uses specific endpoint in API mode
+* `.api_get_aggregate_areas()` / `.api_get_aggregate_links()` : retrieve aggregated areas/links raw data from study economy outputs
+* `format_api_aggregate_result()` : match the legacy names for the output column names
+* Rename short-term storage output column from Cashflow to CashFlow
+
+REVDEP (temporary) : 
+
+✔ antaresEditObject 0.9.0 ── E: 0     | W: 0     | N: 0                                                            
+✔ antaresProcessing 0.18.3 ── E: 0     | W: 0     | N: 0                                                            
+✔ antaresViz 0.18.3 ── E: 0     | W: 0     | N: 0 
+
+DOC :  
+
+* pkgdown site updated to bootsrap 5
+
+
+# antaresRead 2.9.1 (NOT CRAN)
+
+NEW FEATURES:  
+ 
+* `readBindingConstraints()` : has a new parameter `'with_time_series'` (default to `TRUE`) to enable or disable the time series reading (optimization)
+
+BUGFIXES :  
+ 
+* `api_get() / api_post () / api_put() / api_delete()` : treat case when default_endpoint provided is empty  
+* `setSimulationPathAPI()` : The version number returned for a study >= 9.2 (9.2*100) is in fact considered by R as <920 with a precision of `-1.136868e-13`. This falsifies the version number checks (atypical error depending on machine precision, see R doc `?double`)
+ 
+BREAKING CHANGES :  
+ 
+* `setSimulationPathAPI()` : sets timeout to 600s by default. 600s is the default value in Antares Web.
 
 # antaresRead 2.9.0
-(cf. Antares v9 changelog)  
 
 NEW FEATURES:  
 
+* `setSimulationPathAPI()` : reads and returns the new converted study version format (ex : 9.0 => 900)
 * `setSimulationPath()` / `setSimulationPathAPI()` have a new parameter `'verbose'` (default to `FALSE`) to manage diagnostic messages
+
 
 BUGFIXES :  
 
 * `setSimulationPathAPI()` : encode URL before reading the data in simulation mode
 * `api_get()` : add warn_for_status in importFrom section
 * `readAntares()` : In disk mode, return all the available columns for a short-term storage output and match the column with the content
-* `.importOutput()` : check if output file exists in API mode (`.check_output_files_existence()`)
+* `.importOutput()` : check if output file exists in API mode (`.check_missing_output_files()`)
 * `.giveSize()` : take into account ST clusters in the size computing and use enabled == TRUE or empty enabled for enabled clusters and ST clusters 
 
 BREAKING CHANGES :  
 
-* `setSimulationPathAPI()` : reads and returns the new converted study version format (ex : 9.0 => 900)  
 * `readClusterDesc()` / `readClusterResDesc()` / `readClusterSTDesc()` have a new parameter (`dot_format = TRUE`) to return two format to display input cluster properties
 
 GITHUB ACTIONS :  

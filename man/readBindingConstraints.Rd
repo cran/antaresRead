@@ -4,11 +4,19 @@
 \alias{readBindingConstraints}
 \title{Read binding constraints}
 \usage{
-readBindingConstraints(opts = simOptions())
+readBindingConstraints(
+  opts = simOptions(),
+  with_time_series = TRUE,
+  constraint_names = NULL
+)
 }
 \arguments{
 \item{opts}{list of simulation parameters returned by the function
 \code{\link{setSimulationPath}}}
+
+\item{with_time_series}{\code{boolean} if TRUE, the second member time series are read}
+
+\item{constraint_names}{\code{str} constraint names to filter on}
 }
 \value{
 An object of class \code{bindingConstraints}. This object is also a named
@@ -44,7 +52,7 @@ Since \verb{release 2.7.0} the structure of the returned object has evolved for
 all versions of study Antares:
 \itemize{
 \item .ini parameters are in section \code{properties}
-\item Coeffcients links or thermal are in section \code{coefs}
+\item Coefficients links or thermal are in section \code{coefs}
 \item Values are already in section \code{values}
 }
 }
@@ -70,6 +78,8 @@ constraints$values$greater
 # display equation (only for study Antares <8.7.0)
 summary(constraints)
 
+# read binding constraints without the time series
+readBindingConstraints(opts = simOptions(), with_time_series = FALSE)
 }
 
 }

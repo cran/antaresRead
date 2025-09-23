@@ -25,12 +25,27 @@
 #'         endpoint = NULL, 
 #'         parse_result = NULL)
 #'
-#' # you can force parse options as text and encoding to UTF-8
+#' # You can force parse options as text and encoding to UTF-8
 #' api_get(opts = list(host = "http://0.0.0.0:8080"),
 #'         endpoint = NULL, 
 #'         parse_result = "text",
 #'         encoding = "UTF-8")
-#'
+#'         
+#' # You can change or delete `default_endpoint` 
+#' 
+#' # no use `default_endpoint`
+#' api_get(opts = list(host = "http://0.0.0.0:8080"),
+#'         endpoint = NULL, 
+#'         default_endpoint = NULL,
+#'         parse_result = "text",
+#'         encoding = "UTF-8")
+#'         
+#' # replace `default_endpoint`
+#' api_get(opts = list(host = "http://0.0.0.0:8080"),
+#'         endpoint = NULL, 
+#'         default_endpoint = "myfolder/myfolder",
+#'         parse_result = "text",
+#'         encoding = "UTF-8")       
 #' }
 api_get <- function(opts, 
                     endpoint, ..., 
@@ -42,6 +57,11 @@ api_get <- function(opts,
     endpoint <- NULL
     default_endpoint <- NULL
   }
+  
+  if (identical(default_endpoint, "")) {
+    default_endpoint <- NULL
+  }
+  
   if (is.null(opts$host))
     stop("No host provided in `opts`: use a valid simulation options object or explicitly provide a host with opts = list(host = ...)")
   config <- c(
@@ -57,7 +77,7 @@ api_get <- function(opts,
     )
   }
   if (is.null(opts$timeout))
-    opts$timeout <- 60
+    opts$timeout <- 600
   result <- GET(
     url = URLencode(paste(c(opts$host, default_endpoint, endpoint), collapse = "/")),
     config = config,
@@ -67,16 +87,29 @@ api_get <- function(opts,
   #fix for skipping 404 when some output is missing
   url_elements <- strsplit(result$url, "%2F")[[1]]
   condition_status_check <- !(!is.na(url_elements[4]) & url_elements[4] %in% c("economy","adequacy") & result$status_code == 404)
-  if(condition_status_check){
+  if (condition_status_check) {
     mess_error <- content(result)
-    if(!is.null(names(mess_error)))
-      mess_error <- paste0("\n[Description] : ", mess_error$description,
-                           "\n[Exception] : ", mess_error$exception)
-    else
+    if (!is.null(names(mess_error))) {
+      with_description <- "description" %in% names(mess_error)
+      with_exception <- "exception" %in% names(mess_error)
+      if (with_description & with_exception) {
+        mess_error <- paste0("\n[Description] : ", mess_error$description,
+                             "\n[Exception] : ", mess_error$exception)
+      } else if (with_description & !with_exception) {
+        mess_error <- paste0("\n[Description] : ", mess_error$description)
+      } else if (!with_description & with_exception) {
+        mess_error <- paste0("\n[Exception] : ", mess_error$exception)
+      } else {
+        mess_error <- NULL
+      }
+    } else {
       mess_error <- NULL
+    }
     stop_for_status(result, task = mess_error)
-    }else 
-      warn_for_status(result)
+  } else {
+    warn_for_status(result)
+  }
+  
   content(result, as = parse_result, encoding = encoding)
 }
 
@@ -91,6 +124,11 @@ api_post <- function(opts, endpoint, ..., default_endpoint = "v1/studies") {
     endpoint <- NULL
     default_endpoint <- NULL
   }
+  
+  if (identical(default_endpoint, "")) {
+    default_endpoint <- NULL
+  }
+  
   if (is.null(opts$host))
     stop("No host provided in `opts`: use a valid simulation options object or explicitly provide a host with opts = list(host = ...)")
   config <- c(
@@ -132,6 +170,11 @@ api_put <- function(opts, endpoint, ..., default_endpoint = "v1/studies") {
     endpoint <- NULL
     default_endpoint <- NULL
   }
+  
+  if (identical(default_endpoint, "")) {
+    default_endpoint <- NULL
+  }
+  
   if (is.null(opts$host))
     stop("No host provided in `opts`: use a valid simulation options object or explicitly provide a host with opts = list(host = ...)")
   if (!is.null(opts$token) && opts$token != "") {
@@ -165,6 +208,11 @@ api_delete <- function(opts, endpoint, ..., default_endpoint = "v1/studies") {
     endpoint <- NULL
     default_endpoint <- NULL
   }
+  
+  if (identical(default_endpoint, "")) {
+    default_endpoint <- NULL
+  }
+  
   if (is.null(opts$host))
     stop("No host provided in `opts`: use a valid simulation options object or explicitly provide a host with opts = list(host = ...)")
   config <- c(

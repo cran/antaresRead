@@ -109,38 +109,47 @@ utils::globalVariables(
     "thermalPmin", "name", "value", "Tech.Name", '..format_field',
     "Folder", "Mode", "Stats", "Name", "progNam", "mrgprice", "isLOLD_cum",
     "...To", "upstream", "downstream", "LOLD", "LOLD_data", "LOLP", "warn_for_status",
-    "MRG. PRICE", "H. LEV", "V2", "V1", "size", "ORDINAL_POSITION_BY_TOPIC", 
-    "DETAILS_FILES_TYPE","ANTARES_DISPLAYED_NAME")
+    "MRG. PRICE", "H. LEV", "V2", "V1", "size", "ORDINAL_POSITION_BY_TOPIC",
+    "DETAILS_FILES_TYPE","ANTARES_DISPLAYED_NAME","MIN_VERSION")
 )
 
+## thematic ----
+ref_thematic_880 <- read.table(file = system.file("variables_selection/ref_thematic_by_version/ref_880.csv",
+                                                 package = "antaresRead"),
+                              header = TRUE,
+                              sep = ",")
+
+ref_thematic_880$col_name <- trimws(ref_thematic_880$col_name)
+
+ref_thematic_920 <- read.table(system.file("variables_selection/ref_thematic_by_version/ref_920.csv",
+                                           package = "antaresRead"),
+                               header = TRUE,
+                               sep = ",")
+
+ref_thematic_920$col_name <- trimws(ref_thematic_920$col_name)
+
+ref_thematic <- list("880" = ref_thematic_880,
+                     "920" = ref_thematic_920)
+
+pkgEnv$thematic <- ref_thematic
+
+### api ----
+ref_thematic_api <- read.table(file = system.file("variables_selection/ref_thematic_by_version/api_ref_conversion.csv",
+                                                  package = "antaresRead"),
+                               header = TRUE,
+                               sep = ",")
+
+pkgEnv$thematic_api <- ref_thematic_api
+
+
 ## INPUT Properties REF ----
-res_prop_ref <- data.table::fread(system.file("referential_properties/properties_input_renewable.csv", 
+cluster_properties <- data.table::fread(system.file("referential_properties/cluster_properties.csv",
                                               package = "antaresRead"),
-                                  sep = ";", 
+                                  sep = ";",
                                   header = TRUE)
 
-res_prop_therm <- data.table::fread(system.file("referential_properties/properties_input_thermal.csv", 
-                                                package = "antaresRead"),
-                                    sep = ";", 
-                                    header = TRUE)
-
-res_prop_st <- data.table::fread(system.file("referential_properties/properties_input_storage.csv", 
-                                             package = "antaresRead"),
-                                 sep = ";",
-                                 header = TRUE)
-
-df_files_ref <- do.call("rbind", 
-                        list(res_prop_ref, res_prop_therm, res_prop_st))
-# create new column "operating_format" to return "Valid Names" (separator variable with ".") 
-  # legacy format
-new_col_format <- make.names(df_files_ref[["INI Name"]])
-df_files_ref[, operating_format := new_col_format]
-
-# format col names too
-names(df_files_ref) <-  make.names(names(df_files_ref))
-
 # append
-pkgEnv$inputProperties <- df_files_ref
+pkgEnv$inputProperties <- cluster_properties
 
 integerVariable <- as.character(unique(pkgEnv$formatName$Name[which(pkgEnv$formatName$digits == 0)]))
 integerVariable <- unlist(apply(expand.grid(integerVariable, c("", "_std", "_min", "_max")), 1,

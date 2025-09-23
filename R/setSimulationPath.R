@@ -405,7 +405,8 @@ setSimulationPath <- function(path, simulation = NULL) {
   simDataPath <- switch(as.character(info$mode),
                         "draft" = "adequacy-draft",
                         "Economy" = "economy",
-                        "Adequacy" = "adequacy")
+                        "Adequacy" = "adequacy",
+                        "Expansion" = "economy")
   simDataPath <- file.path(simPath, simDataPath)
   
   # Which results are available ? Synthesis ? Monte-Carlo years ?
@@ -709,7 +710,7 @@ setSimulationPath <- function(path, simulation = NULL) {
          call. = FALSE)
   
   # convert to numeric for package understanding
-  num_version <- as.numeric(antares_version)*100
+  num_version <- round(as.numeric(antares_version)*100)
   
   return(num_version)
 }

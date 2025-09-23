@@ -12,6 +12,10 @@
 #' they may have changed since a simulation has been run.
 #' 
 #' @inheritParams readAntares
+#' @param with_time_series \code{boolean} if TRUE, the second member time series are read
+#' @param constraint_names \code{str} constraint names to filter on
+#'
+#' @importFrom assertthat assert_that
 #' 
 #' @return 
 #' An object of class \code{bindingConstraints}. This object is also a named 
@@ -21,7 +25,7 @@
 #' Since `release 2.7.0` the structure of the returned object has evolved for 
 #' all versions of study Antares:  
 #'  - .ini parameters are in section `properties`
-#'  - Coeffcients links or thermal are in section `coefs`  
+#'  - Coefficients links or thermal are in section `coefs`  
 #'  - Values are already in section `values`
 #'  
 #' @note 
@@ -60,11 +64,15 @@
 #' # display equation (only for study Antares <8.7.0)
 #' summary(constraints)
 #' 
+#' # read binding constraints without the time series
+#' readBindingConstraints(opts = simOptions(), with_time_series = FALSE)
 #' }
 #' 
 #' @export
-readBindingConstraints <- function(opts = simOptions()) {
-
+readBindingConstraints <- function(opts = simOptions(), with_time_series = TRUE, constraint_names = NULL) {
+  
+  assert_that(inherits(with_time_series, what = "logical"))
+  
   ##
   # API BLOC
   ##
@@ -92,12 +100,19 @@ readBindingConstraints <- function(opts = simOptions()) {
     return(NULL)
   }
   
+  # Filter on constraint_names
+  if (!is.null(constraint_names)) {
+    bindingConstraints <- .filter_bindingConstraints_by_names(bindingConstraints = bindingConstraints,
+                                                              constraint_names = constraint_names)
+  }
   ##
   # read values txt files
   ##
-  bindingConstraints <- lapply(bindingConstraints, 
-                               .read_binding_values, 
-                               opts = opts)
+  if (with_time_series) {
+    bindingConstraints <- lapply(bindingConstraints, 
+                                 FUN = .read_binding_values, 
+                                 opts = opts)
+  }
   
   ##
   # manage full list object
@@ -114,10 +129,18 @@ readBindingConstraints <- function(opts = simOptions()) {
                                .manage_list_structure, 
                                opts = opts)
   
+  if (!with_time_series) {
+    bindingConstraints <- lapply(bindingConstraints,
+                                 FUN = function(bc) {bc[!names(bc)=="values"]}
+                                 )
+  }
+  
   names(bindingConstraints) <- constraintNames
   class(bindingConstraints) <- "bindingConstraints"
-  bindingConstraints
+  
+  return(bindingConstraints)
 }
+
 
 # read values files for every binding of study
 .read_binding_values <- function(binding_object, 
@@ -224,11 +247,13 @@ readBindingConstraints <- function(opts = simOptions()) {
   }
 }
 
+
 # build list structure according to antares version
 .manage_list_structure <- function(binding_object, 
                                    opts = simOptions()){
+  
   # default names of parameters (core parameters)
-  names_elements <- c("name", "id", "enabled", "type", "operator", "values")
+  names_elements <- c("name", "id", "enabled", "type", "operator", "comments", "values")
   
   # get links information from list
   coefs_elements <- setdiff(names(binding_object), 
@@ -241,8 +266,11 @@ readBindingConstraints <- function(opts = simOptions()) {
   ##
   # filter on parameters to keep only links information
   
+  is_v832 <- opts[["antaresVersion"]] >= 832
+  is_v870 <- opts[["antaresVersion"]] >= 870
+  
   # v832
-  if (opts$antaresVersion>=832){
+  if (is_v832) {
     names_elements_832 <- c("filter-year-by-year", 
                             "filter-synthesis")
     elements_832 <- binding_object[which(names(binding_object) %in% 
@@ -252,7 +280,7 @@ readBindingConstraints <- function(opts = simOptions()) {
   }
   
   # v870
-  if(opts$antaresVersion>=870){
+  if (is_v870) {
     names_elements_870 <- "group"
     elements_870 <- binding_object[which(names(binding_object) %in% 
                                            names_elements_870)]
@@ -266,22 +294,25 @@ readBindingConstraints <- function(opts = simOptions()) {
   
   # core elements list
   core_list <- list(
-    properties = list(
-      name = binding_object$name,
-      id = binding_object$id,
-      enabled = binding_object$enabled,
-      timeStep = binding_object$type,
-      operator = binding_object$operator),
-    coefs = unlist(coefs_values),
-    values = binding_object$values)
+    "properties" = list(
+      "name" = binding_object[["name"]],
+      "id" = binding_object[["id"]],
+      "enabled" = binding_object[["enabled"]],
+      "timeStep" = binding_object[["type"]],
+      "operator" = binding_object[["operator"]],
+      "comments" = binding_object[["comments"]]
+      ),
+    "coefs" = unlist(coefs_values),
+    "values" = binding_object[["values"]]
+  )
   
   # add properties according to version
   # decreasing approach
   
   # v870
-  if(opts$antaresVersion>=870){
+  if (is_v870) {
     list_870 <- list()
-    list_870$properties = append(core_list$properties, 
+    list_870[["properties"]] = append(core_list[["properties"]], 
                                  c(
                                    unlist(elements_832),
                                    unlist(elements_870)))
@@ -290,9 +321,9 @@ readBindingConstraints <- function(opts = simOptions()) {
     return(list_870)
   }
   # v832
-  if(opts$antaresVersion>=832){
+  if (is_v832) {
     list_832 <- list()
-    list_832$properties = append(core_list$properties, 
+    list_832[["properties"]] = append(core_list[["properties"]], 
                                  unlist(elements_832))
     list_832 <- append(list_832, 
                        core_list[c(2,3)])
@@ -301,6 +332,7 @@ readBindingConstraints <- function(opts = simOptions()) {
   
   return(core_list)
 }
+
 
 #' @title Display equation of binding constraint
 #' @description 
@@ -364,4 +396,26 @@ summary.bindingConstraints <- function(object, ...) {
     timeStep = timeStep, 
     equation = equations
   )
+}
+
+#' @title Filter a list of binding constraints by names by a exact match
+#' @param bindingConstraints \code{list} a list of binding constraints
+#' @param constraint_names \code{str} constraint names to filter on
+#' @return A list of binding constraints containing the constraints which have their name in constraint_names.
+.filter_bindingConstraints_by_names <- function(bindingConstraints, constraint_names) {
+  
+  constraint_names <- tolower(constraint_names)
+  existing_constraint_names <- sapply(bindingConstraints, "[[", "name", USE.NAMES = FALSE, simplify = TRUE)
+  existing_constraint_names <- tolower(existing_constraint_names)
+  constraint_names <- intersect(existing_constraint_names, constraint_names)
+  
+  if (length(constraint_names) == 0) {
+    warning("No binding constraints with one of the names you provide as argument.")
+    return(NULL)
+  }
+  
+  # index starts at 0 in input/bindingconstraints/bindingconstraints.ini
+  idx_constraint_names <- which(existing_constraint_names %in% constraint_names) - 1
+  
+  return(bindingConstraints[names(bindingConstraints) %in% idx_constraint_names])
 }
