@@ -15,7 +15,7 @@
 #'
 #' @noRd
 #'
-.getOutputHeader <- function(path, objectName, api = FALSE, token = NULL, timeout = 60, config = list()) {
+.getOutputHeader <- function(path, objectName, api = FALSE, token = NULL, timeout = 600, config = list()) {
   if(!api){
     colname <- read.table(path, header = F, skip = 4, nrows = 3, sep = "\t")
   } else {
@@ -323,9 +323,9 @@
 
 # Compute the pattern to put in the url to select the desired columns
 .compute_pattern_select_url <- function(select, query_file) {
-  
+
   columns_url <- ""
-  
+
   if (!identical(select, "")) {
     if (query_file == "values") {
       columns_url <- paste0("&columns_names=", paste0(select, collapse = ","))
@@ -335,7 +335,7 @@
       new_select <- filtered_variables_names[filtered_variables_names$RPACKAGE_DISPLAYED_NAME %in% select,]$OUTPUT_DISPLAYED_NAME
       if (length(new_select) > 0) {
         columns_url <- paste0("&columns_names=", paste0(new_select, collapse = ","))
-      }    
+      }
     }
   }
 
@@ -358,14 +358,14 @@
       mc_years_url <- paste0("&mc_years=", paste0(mcYears, collapse = ","))
     }
   }
-  
+
   if (!identical(areas, "")) {
     areas_url <- paste0("&areas_ids=", paste0(areas, collapse = ","))
   }
-  
+
   columns_url <- .compute_pattern_select_url(select = select, query_file = query_file)
-  
-  endpoint_root <- paste0(opts[["study_id"]], "/areas/aggregate/", pattern_endpoint, "/", opts[["simOutputName"]], "?format=csv")
+
+  endpoint_root <- paste0(opts[["study_id"]], "/areas/aggregate/", pattern_endpoint, "/", opts[["simOutputName"]], "?format=parquet")
   endpoint <- paste0(endpoint_root,
                      paste0("&query_file=", query_file),
                      paste0("&frequency=", timeStep),
@@ -379,25 +379,31 @@
 
 
 .download_and_format_api_get_aggregate_areas_result <- function(areas, timeStep, query_file, select, mcYears, opts) {
-  
+
   download_id <- .api_get_aggregate_areas(areas = areas,
                                           timeStep = timeStep,
                                           query_file = query_file,
                                           select = select,
                                           mcYears = mcYears,
                                           opts = opts
-                                         )
+                                         )  
   res <- .download_api_aggregate_result(download_id = download_id, opts = opts)
   .format_api_aggregate_result(res = res, type_res = query_file)
 }
 
 
 .download_and_format_api_get_aggregate_areas_result_bulk <- function(areas, timeStep, query_file, select, mcYears, number_of_batches, opts) {
-  
+
   if (is.null(mcYears)) {
-    res <- .download_and_format_api_get_aggregate_areas_result(areas = areas, timeStep = timeStep, query_file = query_file, select = select, mcYears = mcYears, opts = opts)
+    res <- .download_and_format_api_get_aggregate_areas_result(areas = areas,
+                                                               timeStep = timeStep,
+                                                               query_file = query_file,
+                                                               select = select,
+                                                               mcYears = mcYears,
+                                                               opts = opts
+                                                              )
   } else {
-    batches <- split_vector_in_equal_parts(x = mcYears, n = number_of_batches) 
+    batches <- split_vector_in_equal_parts(x = mcYears, n = number_of_batches)
     lst_res <- lapply(batches,
                       FUN = .download_and_format_api_get_aggregate_areas_result,
                       areas = areas,
@@ -408,45 +414,44 @@
                       )
     res <- do.call("rbind", lst_res)
   }
-  
+
   return(res)
 }
 
 
 #' Retrieve information on a file's state of preparation and retrieve download file.
 #'
-#' @importFrom data.table fread
+#' @importFrom arrow read_parquet
+#' @importFrom data.table as.data.table
 #'
 #' @param download_id the id of the download.
 #' @template opts
 #'
 #' @return a data.table
 .download_api_aggregate_result <- function(download_id, opts) {
-  
+
   default_endpoint <- "v1/downloads"
-  
+
   download_status <- api_get(opts = opts,
                              default_endpoint = default_endpoint,
                              endpoint = paste0(download_id,"/metadata?wait_for_availability=true")
                             )
   response <- api_get(opts = opts,
                       default_endpoint = default_endpoint,
-                      endpoint = download_id,
-                      parse_result = "text",
-                      encoding = "UTF-8"
+                      endpoint = download_id
                      )
   
   if (identical(response, "")) {
     return(data.table())
   } else {
-    return(fread(input = response, data.table = TRUE))
+    res <- read_parquet(file = response, as_data_frame = TRUE)
+    return(as.data.table(res))
   }
-     
 }
 
 
 .filter_referential_output_column_names_by_type <- function(type_res){
-  
+
   simulation_variables_names_by_support <- read.table(system.file(
     "format_output","simulation_variables_names_by_support.csv", package = "antaresRead"
     ),
@@ -454,7 +459,7 @@
     fileEncoding = "UTF-8",
     header = TRUE
   )
-  
+
   return(subset(simulation_variables_names_by_support,DETAILS_FILES_TYPE==type_res))
 }
 
@@ -471,14 +476,14 @@
 #' @noRd
 #'
 .rename_api_aggregate_result_colnames_to_legacy_names <- function(res_colnames, type_res) {
-  
+
   filtered_variables_names <- .filter_referential_output_column_names_by_type(type_res = type_res)
-  
+
   res_cols <- data.frame("cols" = res_colnames,
                          "ORDINAL_POSITION" = seq(res_colnames)
                         )
-  
-  res_cols <- merge(x = res_cols, 
+
+  res_cols <- merge(x = res_cols,
                     y = filtered_variables_names[,c("OUTPUT_DISPLAYED_NAME", "RPACKAGE_DISPLAYED_NAME")],
                     by.x = "cols",
                     by.y = "OUTPUT_DISPLAYED_NAME",
@@ -486,7 +491,7 @@
                     )
   res_cols <- res_cols[order(res_cols$ORDINAL_POSITION),]
   res_cols$RPACKAGE_DISPLAYED_NAME[is.na(res_cols$RPACKAGE_DISPLAYED_NAME)] <- res_cols$cols[is.na(res_cols$RPACKAGE_DISPLAYED_NAME)]
-  
+
   return(res_cols$RPACKAGE_DISPLAYED_NAME)
 }
 
@@ -497,7 +502,7 @@
   if (is.null(res)) {
     return(NULL)
   }
-  
+
   res_cols <- colnames(res)
 
   cols_to_factor_lower <- c("area", "link", "cluster")
@@ -514,9 +519,9 @@
   pattern <- c(" MIN$", " MAX$", " STD$", " EXP$", " VALUES$")
   replacement <- c("_min", "_max", "_std", "", "")
   new_cols <- stri_replace_all_regex(str = res_cols, pattern = pattern, replacement = replacement, vectorize_all = FALSE)
-  
+
   new_cols <- .rename_api_aggregate_result_colnames_to_legacy_names(res_colnames = new_cols, type_res = type_res)
-  
+
   return(setnames(res, old = res_cols, new = new_cols))
 }
 
@@ -560,7 +565,7 @@
   filtered_variables_names <- subset(simulation_variables_names_by_support,DETAILS_FILES_TYPE==type)
   if (type=="details" && opts$antaresVersion < 830)
     filtered_variables_names <- subset(filtered_variables_names,ANTARES_DISPLAYED_NAME!="Profit by plant")
-  filtered_variables_names <- subset(filtered_variables_names,opts[["antaresVersion"]] >= MIN_VERSION | is.na(MIN_VERSION)) 
+  filtered_variables_names <- subset(filtered_variables_names,opts[["antaresVersion"]] >= MIN_VERSION | is.na(MIN_VERSION))
   # Order is important. There is a correspondance between elements
   ordered_filtered_variables_names <- filtered_variables_names[
     order(filtered_variables_names$ORDINAL_POSITION_BY_TOPIC),
@@ -568,7 +573,7 @@
 
   all_thematic_variables <- ordered_filtered_variables_names$ANTARES_DISPLAYED_NAME
   colNames <- ordered_filtered_variables_names$RPACKAGE_DISPLAYED_NAME
-  
+
   # With thematic-trimming enabled
   if (opts$parameters$general$`thematic-trimming`) {
     if ("variables selection" %in% names(opts$parameters)) {
@@ -1164,11 +1169,11 @@
   if (is.null(links)) {
     return(NULL)
   }
-  
+
   links_url <- ""
   columns_url <- ""
   mc_years_url <- ""
-  
+
   if (is.null(mcYears)) {
     pattern_endpoint <- "mc-all"
   } else {
@@ -1188,21 +1193,21 @@
   if (!identical(select, "")) {
     columns_url <- paste0("&columns_names=", paste0(select, collapse = ","))
   }
-  
-  endpoint_root <- paste0(opts[["study_id"]], "/links/aggregate/", pattern_endpoint, "/", opts[["simOutputName"]], "?format=csv&query_file=values")
+
+  endpoint_root <- paste0(opts[["study_id"]], "/links/aggregate/", pattern_endpoint, "/", opts[["simOutputName"]], "?format=parquet&query_file=values")
   endpoint <- paste0(endpoint_root,
                      paste0("&frequency=", timeStep),
                      columns_url,
                      links_url,
                      mc_years_url
                     )
-  
+
   return(api_get(opts = opts, endpoint = endpoint, default_endpoint = "v1/studies"))
 }
 
 
 .download_and_format_api_get_aggregate_links_result <- function(links, timeStep, select, mcYears, opts) {
-  
+
   download_id <- .api_get_aggregate_links(links = links,
                                           timeStep = timeStep,
                                           select = select,
@@ -1215,11 +1220,11 @@
 
 
 .download_and_format_api_get_aggregate_links_result_bulk <- function(links, timeStep, select, mcYears, number_of_batches, opts) {
-  
+
   if (is.null(mcYears)) {
     res <- .download_and_format_api_get_aggregate_links_result(links = links, timeStep = timeStep, select = select, mcYears = mcYears, opts = opts)
   } else {
-    batches <- split_vector_in_equal_parts(x = mcYears, n = number_of_batches) 
+    batches <- split_vector_in_equal_parts(x = mcYears, n = number_of_batches)
     lst_res <- lapply(batches,
                       FUN = .download_and_format_api_get_aggregate_links_result,
                       links = links,
@@ -1229,7 +1234,7 @@
                       )
     res <- do.call("rbind", lst_res)
   }
-  
+
   return(res)
 }
 
@@ -1376,6 +1381,7 @@
       f <- file.path(pathInput, area, "mod.txt")
     }
   } else {
+    # Bug here. tsIds are stored in a list of numbers with read_secure_json(). No need to use strsplit. Use unlist or names instead. Check .importThermal and the goal of this.
     tsIds <- as.numeric(strsplit(
       read_secure_json(file.path(pathTSNumbers, area), token = opts$token,
                        timeout = opts$timeout, config = opts$httr_config),
@@ -1454,7 +1460,7 @@
   if (synthesis) {
     res <- res[, .(hydroStorage=mean(hydroStorage)), keyby = .(area, timeId)]
   }
-
+  
   res
 
 }

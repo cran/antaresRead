@@ -1,5 +1,26 @@
 > Copyright © 2016 RTE Réseau de transport d’électricité
 
+# antaresRead 2.9.3
+
+NEW FEATURES (cf. Antares v9.3 changelog) :
+DOCFIX :  
+
+* `setSimulationPathAPI()`/`setTimeoutAPI()` updated with timeout to *600s*  
+  - All functions with default value timeout to *60s* are updated with *600s* 
+* `getThematicTrimming()` to read sub section "variables selection" of file `generaldata.ini`  
+  - Use new referentials(DISPATCH. GEN. and RENEWABLE GEN.), twice for file system and one for API
+
+NEW FEATURES (other) :  
+
+* `.api_get_aggregate_areas()/.api_get_aggregate_links()` : query the endpoint in format `parquet`
+* `.download_api_aggregate_result()` : read a parquet file with arrow package
+
+BUGFIXES :
+* `.readDistrictsDefAPI()` picks `add-all` value in expected property `apply-filter`
+* `.fread_antares()` : in API mode, add *parse_result* argument to text
+* `.getInputOptionsAPI()` : in API mode, ensure that the areas stored in areasWithClusters, areasWithResClusters, areasWithSTClusters have clusters
+
+
 # antaresRead 2.9.2
 
 NEW FEATURES (cf. Antares v9.2 changelog) :

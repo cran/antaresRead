@@ -2,7 +2,7 @@ Package: antaresRead
 Type: Package
 Title: Import, Manipulate and Explore the Results of an 'Antares'
         Simulation
-Version: 2.9.2
+Version: 2.9.3
 Authors@R: c(
     person("Tatiana", "Vargas", email = "tatiana.vargas@rte-france.com", role = c("aut", "cre")),
     person("Jalal-Edine", "ZAWAM", role = "aut"),
@@ -28,7 +28,8 @@ BugReports: https://github.com/rte-antares-rpackage/antaresRead/issues
 License: GPL (>= 2) | file LICENSE
 Imports: data.table (>= 1.15.0), bit64, lubridate (>= 1.7.1), plyr,
         methods, stats, stringr, stringi, shiny, pbapply, doParallel,
-        jsonlite, httr, utils, memuse, purrr, lifecycle, assertthat
+        jsonlite, httr, utils, memuse, purrr, lifecycle, assertthat,
+        arrow
 Suggests: testthat, covr, knitr, rmarkdown, foreach, parallel,
         htmltools
 RoxygenNote: 7.2.2
@@ -36,7 +37,7 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 biocViews: Infrastructure, DataImport
 NeedsCompilation: no
-Packaged: 2025-09-23 14:13:36 UTC; berthetcle
+Packaged: 2025-11-06 08:37:06 UTC; berthetcle
 Author: Tatiana Vargas [aut, cre],
   Jalal-Edine ZAWAM [aut],
   Frederic Breant [ctb],
@@ -53,4 +54,4 @@ Author: Tatiana Vargas [aut, cre],
   RTE [cph]
 Maintainer: Tatiana Vargas <tatiana.vargas@rte-france.com>
 Repository: CRAN
-Date/Publication: 2025-09-23 14:40:02 UTC
+Date/Publication: 2025-11-06 09:10:02 UTC
