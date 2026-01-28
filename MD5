@@ -1,7 +1,7 @@
-9118cbcfe8d631e827261bfbcee2053a *DESCRIPTION
+29f437d6db3e0be278d1bf40af64cf0c *DESCRIPTION
 cf47069209a8ee5e05e334b69c3deb13 *LICENSE
 5a7d02996a676a11e6669c865d9d6d00 *NAMESPACE
-c73be2f6419d20c972a2dcebdbf1d1a6 *NEWS.md
+5ef1354a08ad3466bed5b18a05b4a343 *NEWS.md
 35f88c91a8fa019c88cdbcdd41d7dd3a *R/API-methods.R
 dd7ce1781f3746040300ce5758d49eb0 *R/addClassAndAttributes.R
 247c374a1ca5106b1c44bd487e92755c *R/addDateTimeColumns.R
@@ -23,7 +23,7 @@ c2b6faa64025116620158f04bb046837 *R/digest.R
 4342cbbf5ae0117558261f79ef18d0c0 *R/groupByDistrict.R
 e9e48cbf9f983d7fff2af7b499f2e3e1 *R/hvdcModification.R
 91bac532521faf3ede8b65f08fa8cfc1 *R/importInput.R
-8d63a553e364f78ec3fced2c935b9f30 *R/importOutput.R
+91c5b66c7544b4c0542c62f759cc8af0 *R/importOutput.R
 229979fdce3f1bdb41ac16aa09db2efd *R/mergeByRef.R
 a17da2eea54fe693e52bd3a20fee9de3 *R/ponderateMcAggregation.R
 218ca62e30149ba9fcf2d85d2511dd3d *R/print.R
@@ -40,8 +40,8 @@ e4520c5f7e4fd6660b2c2034b0a80aca *R/readLayout.R
 c0e9a88da142fba1f090d43acb553565 *R/removeVirtualAreas.R
 7e2c7d45ed6bb6a976e8130b6ecbbad6 *R/reorderCols.R
 d8074fc601cbf40d3186e1a8766fec40 *R/setHvdcAreas.R
-b0da27000cf829747b948de03ec8f2c3 *R/setSimulationPath.R
-bda0b13cbda7f101be19f37040d2cb99 *R/setSimulationPathAPI.R
+bbc71cc4cf740782b4a86e8af99a60c2 *R/setSimulationPath.R
+b3be9060119791d753dee9a03941525c *R/setSimulationPathAPI.R
 bdb2854b058b4d41e61f928a49fbe7f3 *R/showAliases.R
 77849ddf51d0d0fcc98e3af93326f7f7 *R/simOptions.R
 514c64c56a35d71d90d4fa71b831fc8e *R/subset.R
@@ -50,13 +50,13 @@ b74a628c2b394273b802adae8415540b *R/thematic_trimming.R
 00bf8b6e1776cff8e5e2964a380f76df *R/utils.R
 992c71f19d000e9841f6c477996cc833 *R/utils_api.R
 bcde7154343cc572500cb75bfc8b4112 *R/viewAntares.R
-e94dfbd62f0a315812bef327d6f8de82 *R/zzz.R
+3449eceb42297d505f72335433effbdb *R/zzz.R
 0544069cd6a0c5c44ae634029e655fed *build/vignette.rds
 277f81ce726142a451ae252fc971a5e9 *inst/API/demo_api.R
 fbf2bacdc983a3eed64881fcea3377e4 *inst/API/demo_api_enr.R
 bdf87ff3ad6b3948752fde90f98ba969 *inst/ENR_cluster/test_clusters_enr.R
 c573a53ccb8349859fe88dcbf649766d *inst/doc/antaresRead.Rmd
-3896085b6c6572c4329ca48f0f2ca77f *inst/doc/antaresRead.html
+8ee00bee6d55526b395dc53a82d14cc1 *inst/doc/antaresRead.html
 867824768b6c92793ba41e53dc2d9d8e *inst/format_output/h5Struct.csv
 efc612d0e741859fc9f652a330ab92e5 *inst/format_output/simulation_variables_names_by_support.csv
 a6a627e88d9faef3e6e39c3dfaf4ebdf *inst/format_output/tableOutput.csv
@@ -73,7 +73,7 @@ d2b4db38ef9ee7cdcb3ba553c179c6eb *inst/test_v8/test_case_study_v870.tar.gz
 3adf7a3e9fda8f26a468bb65436b0e34 *inst/variables_selection/ref_thematic_by_version/api_ref_conversion.csv
 50fe46f5ef345e75cd062172fdedd066 *inst/variables_selection/ref_thematic_by_version/ref_880.csv
 1adab77003a60e09cf72610a8e6e3f17 *inst/variables_selection/ref_thematic_by_version/ref_920.csv
-3bf3046a61bd0ee812f6a2505fbf59ff *inst/variables_selection/ref_thematic_by_version/ref_930.csv
+524eedba189f90f012fc07fa53f90f5e *inst/variables_selection/ref_thematic_by_version/ref_930.csv
 cdcce59999b1bf8db9cfb82c51949544 *inst/variables_selection/variables_thematic_by_version.csv
 6936989a9b328c0bc79868da9c87a528 *man/API-methods.Rd
 bdef3759b557c95ee3ddd87078948f7f *man/aggregatate_mc_all.Rd
@@ -150,7 +150,7 @@ c82ee0929604c826d06c88b80e26597f *tests/testthat/test-antaresDataTableMethods.R
 f7fdd26eb8dfcc17e5b1ba2b8a5a8555 *tests/testthat/test-getGeographicTrimming.R
 f61352441f6aa8c1467f2e4b9d23ddb4 *tests/testthat/test-getIds.R
 85aa88be88253de2dcb9fea74d43b408 *tests/testthat/test-getLinks.R
-74b0dff1ac2cd6cadd4e88fafc17822d *tests/testthat/test-getStartDate.R
+85c3b591c2e3150cb2af61adb8a976f6 *tests/testthat/test-getStartDate.R
 63cac57ca3e19c8e7dcb814dc42fc5ab *tests/testthat/test-giveSize.R
 e4eeb27309b4a2edbe4c4be98810caab *tests/testthat/test-groupByDistrict.R
 ea5afcaa6ce65b9beff7008fe3cb603f *tests/testthat/test-hvdcModification.R
