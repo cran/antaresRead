@@ -9,7 +9,7 @@
     outputContent <- names(read_secure_json(paste0(outputPath, "&depth=4"), ...))
     simNames <- setdiff(basename(outputContent), c("maps", "logs"))
   }
-	if (length(simNames) == 0) {
+  if (length(simNames) == 0) {
     if (length(simulation) > 0 && !simulation %in% c(0, "input")) {
       stop("Cannot find any simulation result")
     } else {
@@ -55,7 +55,7 @@
 
   ## Read info from json
   simPath <- paths$simPath
-  
+
   # Get basic information about the simulation
   params <- read_secure_json(file.path(simPath, "about-the-study", "parameters"), ...)
 
@@ -162,7 +162,7 @@
       yearByYear = yearByYear,
       scenarios = scenarios,
       mcYears = mcYears,
-      antaresVersion = info$version,
+      antaresVersion = paths$version,
       areaList = areaList,
       districtList = gsub("^@ ?", "", districtList),
       linkList = linkList[linkList %in% linksDef$link],
@@ -239,7 +239,7 @@
   # Areas with st-storage (>=860)
   if(paths$version>=860){
     clusterSTList <- read_secure_json(file.path(inputPath, "st-storage", "clusters", "&depth=4"), ...)
-    
+
     areaHasSTClusters <- vapply(areaList, FUN.VALUE = logical(1), function(a) {
       TF <- FALSE
       try({
@@ -315,7 +315,7 @@ setSimulationPathAPI <- function(host, study_id, token, simulation = NULL,
   }
 
   stopifnot(timeout > 0)
-  
+
   check_study <- tryCatch({
     read_secure_json(file.path(host, "v1/studies", study_id), token = token,
                      timeout = timeout, config = httr_config
@@ -407,9 +407,9 @@ setSimulationPathAPI <- function(host, study_id, token, simulation = NULL,
 
 # Private function that reads the definition of the districts
 .readDistrictsDefAPI <- function(inputPath, areas, token = NULL, timeout = 600) {
-  
+
   districts <- read_secure_json(file.path(inputPath, "areas/sets"), token = token, timeout = timeout)
-  
+
   if (length(districts) == 0) {
     return(NULL)
   }
@@ -426,11 +426,11 @@ setSimulationPathAPI <- function(host, study_id, token, simulation = NULL,
     } else {
       areas <- unlist(x[names(x) == "+"], use.names = FALSE)
     }
-    
+
     if (length(areas) == 0) {
       return(NULL)
     }
-    
+
     data.frame(district = tolower(n), area = tolower(areas), stringsAsFactors = TRUE)
   })
 

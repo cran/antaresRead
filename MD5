@@ -1,7 +1,7 @@
-29f437d6db3e0be278d1bf40af64cf0c *DESCRIPTION
+cbcd56f02c34c5cdb46c8b307899554a *DESCRIPTION
 cf47069209a8ee5e05e334b69c3deb13 *LICENSE
 5a7d02996a676a11e6669c865d9d6d00 *NAMESPACE
-5ef1354a08ad3466bed5b18a05b4a343 *NEWS.md
+0c8e0e2935b3378d07c9fae6e43900ea *NEWS.md
 35f88c91a8fa019c88cdbcdd41d7dd3a *R/API-methods.R
 dd7ce1781f3746040300ce5758d49eb0 *R/addClassAndAttributes.R
 247c374a1ca5106b1c44bd487e92755c *R/addDateTimeColumns.R
@@ -23,7 +23,7 @@ c2b6faa64025116620158f04bb046837 *R/digest.R
 4342cbbf5ae0117558261f79ef18d0c0 *R/groupByDistrict.R
 e9e48cbf9f983d7fff2af7b499f2e3e1 *R/hvdcModification.R
 91bac532521faf3ede8b65f08fa8cfc1 *R/importInput.R
-91c5b66c7544b4c0542c62f759cc8af0 *R/importOutput.R
+7b5b7e67a3336736a801adc475f30734 *R/importOutput.R
 229979fdce3f1bdb41ac16aa09db2efd *R/mergeByRef.R
 a17da2eea54fe693e52bd3a20fee9de3 *R/ponderateMcAggregation.R
 218ca62e30149ba9fcf2d85d2511dd3d *R/print.R
@@ -41,7 +41,7 @@ c0e9a88da142fba1f090d43acb553565 *R/removeVirtualAreas.R
 7e2c7d45ed6bb6a976e8130b6ecbbad6 *R/reorderCols.R
 d8074fc601cbf40d3186e1a8766fec40 *R/setHvdcAreas.R
 bbc71cc4cf740782b4a86e8af99a60c2 *R/setSimulationPath.R
-b3be9060119791d753dee9a03941525c *R/setSimulationPathAPI.R
+71c94dac61653fa416b9c324fe270655 *R/setSimulationPathAPI.R
 bdb2854b058b4d41e61f928a49fbe7f3 *R/showAliases.R
 77849ddf51d0d0fcc98e3af93326f7f7 *R/simOptions.R
 514c64c56a35d71d90d4fa71b831fc8e *R/subset.R
@@ -56,9 +56,9 @@ bcde7154343cc572500cb75bfc8b4112 *R/viewAntares.R
 fbf2bacdc983a3eed64881fcea3377e4 *inst/API/demo_api_enr.R
 bdf87ff3ad6b3948752fde90f98ba969 *inst/ENR_cluster/test_clusters_enr.R
 c573a53ccb8349859fe88dcbf649766d *inst/doc/antaresRead.Rmd
-8ee00bee6d55526b395dc53a82d14cc1 *inst/doc/antaresRead.html
+78d8b25b588edce9f2244bfbebd0862a *inst/doc/antaresRead.html
 867824768b6c92793ba41e53dc2d9d8e *inst/format_output/h5Struct.csv
-efc612d0e741859fc9f652a330ab92e5 *inst/format_output/simulation_variables_names_by_support.csv
+72dbdcb6d24d9497387664e267262d4d *inst/format_output/simulation_variables_names_by_support.csv
 a6a627e88d9faef3e6e39c3dfaf4ebdf *inst/format_output/tableOutput.csv
 8cba71ec049b50486da1dd9d590a0c12 *inst/format_output/tableOutput_aggreg.csv
 557e706ef8e5ac061e6473c79588d76d *inst/format_output/tableOutput_aggreg_v8.csv
@@ -154,7 +154,8 @@ f61352441f6aa8c1467f2e4b9d23ddb4 *tests/testthat/test-getIds.R
 63cac57ca3e19c8e7dcb814dc42fc5ab *tests/testthat/test-giveSize.R
 e4eeb27309b4a2edbe4c4be98810caab *tests/testthat/test-groupByDistrict.R
 ea5afcaa6ce65b9beff7008fe3cb603f *tests/testthat/test-hvdcModification.R
-5da97c69e1c8c6f1c639b8b30738ddde *tests/testthat/test-importOutputForClusters.R
+03dc4ab9df4f9831ed0db777e4145c4f *tests/testthat/test-importOutput.R
+9d8cb6bb703c01ef4a4976ab18dcf86c *tests/testthat/test-importOutputForClusters.R
 e6a801ae1d2cac772a4071ac66659e69 *tests/testthat/test-mcaggreg.R
 a4183167d7cadb8b483f870fef0ed24b *tests/testthat/test-opts-api.R
 79a4cd3ccb272f4884c9a534cb860479 *tests/testthat/test-ponderate.R
@@ -180,6 +181,7 @@ e11668184d7953b34e9d6ca050f5dc8a *tests/testthat/test-readInputTS.R
 8acae5e692354f7bc1ab7af40ac59746 *tests/testthat/test-removeVirtualAreas.R
 6fea5f81fde01b85b67d2b2a7013f99f *tests/testthat/test-setHvdcAreas.R
 8ecfd8eeb1975fc42b852f48305a2bd2 *tests/testthat/test-setSimulationPath.R
+24941f402244e8122f5f7a45aaa3ee59 *tests/testthat/test-setSimulationPathAPI.R
 9717b54995c8dc4594f9eaec3160bdd1 *tests/testthat/test-subset_antaresDataList.R
 250cd2b4b703123ca303644cb478e5a8 *tests/testthat/test-thematic_timming.R
 c5cbfb631d54342b91fcc9d0b12ab398 *tests/testthat/test-viewAntares.R
