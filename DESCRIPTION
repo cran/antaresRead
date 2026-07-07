@@ -2,7 +2,7 @@ Package: antaresRead
 Type: Package
 Title: Import, Manipulate and Explore the Results of an 'Antares'
         Simulation
-Version: 3.0.1
+Version: 3.1.0
 Authors@R: c(
     person("Tatiana", "Vargas", email = "tatiana.vargas@rte-france.com", role = c("aut", "cre")),
     person("Jalal-Edine", "ZAWAM", role = "aut"),
@@ -37,7 +37,7 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 biocViews: Infrastructure, DataImport
 NeedsCompilation: no
-Packaged: 2026-05-27 12:59:51 UTC; berthetcle
+Packaged: 2026-07-07 12:11:22 UTC; kemihakam
 Author: Tatiana Vargas [aut, cre],
   Jalal-Edine ZAWAM [aut],
   Frederic Breant [ctb],
@@ -54,4 +54,4 @@ Author: Tatiana Vargas [aut, cre],
   RTE [cph]
 Maintainer: Tatiana Vargas <tatiana.vargas@rte-france.com>
 Repository: CRAN
-Date/Publication: 2026-05-28 07:50:02 UTC
+Date/Publication: 2026-07-07 12:40:02 UTC
