@@ -1,5 +1,19 @@
 > Copyright © 2016 RTE Réseau de transport d’électricité
 
+
+# antaresRead 3.2.0
+
+NEW FEATURES (V10) :
+* `.transform_antares_version_v10()` to transform a study version format on a format compliant with multiple digits for minor and major (ex : 10.1 => 100100)
+
+BUGFIXES :
+* `.importLinkCapacity()` returns an output even if one capacity file is empty.
+* Fix CRAN note by moving `parallel` from `Suggests` to `Imports` in `DESCRIPTION` file
+
+INTERNAL CHANGES :
+* `.importOutputForDistricts()` use the endpoint `aggregate` to read the output data for the districts
+
+
 # antaresRead 3.1.0
 
 ENHANCEMENT :
@@ -10,7 +24,6 @@ BUGFIXES :
 
 BREAKING CHANGES :
 * `.getInputOptionsAPI()` Since Antares Web 2.33.0, new numbering system in API mode (ex : 7.0, 8.2, 9.2, ...) 
-
 
 # antaresRead 3.0.1
 
